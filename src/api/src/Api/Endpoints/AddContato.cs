@@ -2,8 +2,6 @@
 using Agenda.FIAP.Api.Domain.Entities;
 using Carter;
 using Infrastructure.Data.Context;
-using Infrastructure.Data.Interface;
-using Microsoft.EntityFrameworkCore;
 
 namespace Agenda.FIAP.Api.Endpoints;
 
