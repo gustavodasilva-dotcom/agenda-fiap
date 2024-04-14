@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Infrastructure.Data.Context;
+using Infrastructure.Data.Interface;
+using Infrastructure.Data.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Agenda.FIAP.Api.Infrastructure;
 
@@ -9,6 +12,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
+        services.AddScoped<DataContext, DataContext>();
+        services.AddScoped<IContatoRepository, ContatoRepository>();
         return services;
     }
 }
