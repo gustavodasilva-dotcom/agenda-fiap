@@ -1,26 +1,22 @@
-﻿using Agenda.FIAP.Api.Domain.Entities;
-using Infrastructure.Data.Context;
-using Infrastructure.Data.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Agenda.FIAP.Api.Domain.Abstractions;
+using Agenda.FIAP.Api.Domain.Entities;
+using Agenda.FIAP.Api.Infrastructure.Data.Context;
 
-namespace Infrastructure.Data.Repositories
+namespace Agenda.FIAP.Api.Infrastructure.Data.Repositories;
+
+internal sealed class ContatoRepository : BaseRepository<Contato>, IContatoRepository
 {
-    public class ContatoRepository : BaseRepository<Contato>, IContatoRepository
+    private readonly DataContext dataContext;
+
+    public ContatoRepository(DataContext dataContext)
+       : base(dataContext)
     {
-        private readonly DataContext dataContext;
+        this.dataContext = dataContext;
+    }
 
-        public ContatoRepository(DataContext dataContext)
-           : base(dataContext) {
-            this.dataContext = dataContext;
-        }
-
-        public Contato ObterPorId(int id) {
-            return dataContext.Contato
-                              .Where(a => a.Id == id).FirstOrDefault();
-        }
+    public Contato ObterPorId(int id)
+    {
+        return dataContext.Contato
+                          .Where(a => a.Id == id).FirstOrDefault();
     }
 }

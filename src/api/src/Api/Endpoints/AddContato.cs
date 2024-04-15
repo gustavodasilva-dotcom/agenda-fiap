@@ -1,7 +1,9 @@
-﻿using Agenda.FIAP.Api.Constants;
-using Agenda.FIAP.Api.Domain.Entities;
+﻿using Agenda.FIAP.Api.Application.Contatos.Commands.AdicionarContatos;
+using Agenda.FIAP.Api.Application.Contracts.Requests;
+using Agenda.FIAP.Api.Constants;
 using Carter;
-using Infrastructure.Data.Context;
+using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace Agenda.FIAP.Api.Endpoints;
 
@@ -9,12 +11,25 @@ public class AddContato : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("contatos", async (List<Contato> contatos, DataContext dbContext) =>
+        app.MapPost("api/contatos", async (List<ContatoRequest> contatos, ISender sender) =>
         {
-            await dbContext.AddRangeAsync(contatos);
-            await dbContext.SaveChangesAsync();
+            var resultadoValidacoes = new List<ValidationResult>();
 
-            return Results.Created($"contatos", contatos);
-        }).WithTags(Tags.Contatos);
+            foreach (var contato in contatos)
+            {
+                if (!Validator.TryValidateObject(contato,
+                                                 new ValidationContext(contato),
+                                                 resultadoValidacoes,
+                                                 validateAllProperties: true))
+                {
+                    return Results.BadRequest(resultadoValidacoes);
+                }
+            }
+            
+            var result = await sender.Send(new AdicionarContatosCommand(contatos));
+
+            return Results.Created($"contatos", result);
+        })
+        .WithTags(Tags.Contatos);
     }
 }

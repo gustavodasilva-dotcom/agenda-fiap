@@ -1,6 +1,7 @@
-﻿using Infrastructure.Data.Context;
-using Infrastructure.Data.Interface;
-using Infrastructure.Data.Repositories;
+﻿using Agenda.FIAP.Api.Domain.Abstractions;
+using Agenda.FIAP.Api.Infrastructure.Data.Context;
+using Agenda.FIAP.Api.Infrastructure.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Agenda.FIAP.Api.Infrastructure;
@@ -12,8 +13,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
+        services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("Database"));
+
         services.AddScoped<DataContext, DataContext>();
         services.AddScoped<IContatoRepository, ContatoRepository>();
+
         return services;
     }
 }

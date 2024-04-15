@@ -6,7 +6,7 @@ public class Contato(
     string telefone,
     string email)
 {
-    public Contato()
+    private Contato()
         : this(
               id: 0,
               nome: string.Empty,
@@ -15,11 +15,23 @@ public class Contato(
     {
     }
 
-    public int Id { get; set; } = id;
+    public Contato(
+        string nome,
+        string telefone,
+        string email)
+        : this(
+              id: 0,
+              nome,
+              telefone,
+              email)
+    {
+    }
 
-    public string Nome { get; set; } = nome;
+    public int Id { get; private set; } = id;
 
-    public string Telefone { get; set; } = telefone;
+    public string Nome { get; private set; } = nome;
 
-    public string Email { get; set; } = email;
+    public string Telefone { get; private set; } = telefone;
+
+    public string Email { get; private set; } = email;
 }
