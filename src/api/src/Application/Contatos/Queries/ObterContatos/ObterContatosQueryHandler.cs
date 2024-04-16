@@ -20,7 +20,7 @@ internal sealed class ObterContatosQueryHandler
         ObterContatosQuery request,
         CancellationToken cancellationToken)
     {
-        IEnumerable<Contato> contatos = contatoRepository.ObterTodos();
+        IEnumerable<Contato> contatos = contatoRepository.ObterPorFiltro(request.filtro.Ddd);
 
         var response = contatos.Adapt<IEnumerable<ContatoResponse>>();
 

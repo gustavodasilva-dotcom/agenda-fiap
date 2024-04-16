@@ -15,7 +15,7 @@ public class Contato(
               nome: string.Empty,
               telefone: string.Empty,
               email: string.Empty,
-              ddd: DDD.SP)
+              ddd: 0)
     {
     }
 
@@ -41,5 +41,5 @@ public class Contato(
 
     public string Email { get; private set; } = email;
 
-    public DDD DDD { get; private set; } = ddd;
+    public DDD Ddd { get; private set; } = ddd;
 }
