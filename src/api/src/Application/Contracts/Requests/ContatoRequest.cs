@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Enum;
+using System.ComponentModel.DataAnnotations;
 
 namespace Agenda.FIAP.Api.Application.Contracts.Requests;
 
@@ -13,4 +14,7 @@ public class ContatoRequest
     [Required(ErrorMessage = "O e-mail é obrigatório")]
     [EmailAddress(ErrorMessage = "E-mail em formato inválido.")]
     public string Email { get; set; }
+
+    [EnumDataType(typeof(DDD), ErrorMessage = "DDD inválido.")]
+    public DDD Ddd { get; set; }
 }

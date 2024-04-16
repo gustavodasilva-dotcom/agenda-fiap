@@ -1,4 +1,6 @@
-﻿namespace Agenda.FIAP.Api.Application.Contracts.Responses;
+﻿using Domain.Enum;
+
+namespace Agenda.FIAP.Api.Application.Contracts.Responses;
 
 public class ContatoResponse
 {
@@ -9,4 +11,6 @@ public class ContatoResponse
     public string Telefone { get; set; }
 
     public string Email { get; set; }
+    
+    public DDD Ddd { get; set; }
 }

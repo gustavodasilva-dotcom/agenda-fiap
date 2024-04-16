@@ -28,7 +28,8 @@ internal sealed class AdicionarContatosCommandHandler
                 new Contato(
                     nome: contato.Nome,
                     telefone: contato.Telefone,
-                    email: contato.Email));
+                    email: contato.Email,
+                    ddd: contato.Ddd));
         }
 
         _contatoRepository.Adicionar(contatos);

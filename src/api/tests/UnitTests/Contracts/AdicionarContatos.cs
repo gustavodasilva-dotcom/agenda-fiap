@@ -1,4 +1,5 @@
 using Agenda.FIAP.Api.Application.Contracts.Requests;
+using Domain.Enum;
 using System.ComponentModel.DataAnnotations;
 using UnitTests.Utils;
 
@@ -10,7 +11,8 @@ public class AdicionarContatos
     {
         Nome = UnitTestUtils.GerarString(20),
         Email = UnitTestUtils.GerarEmail(),
-        Telefone = UnitTestUtils.GerarString(8)
+        Telefone = UnitTestUtils.GerarString(8),
+        Ddd = DDD.SP
     };
 
     [Fact]
@@ -60,5 +62,28 @@ public class AdicionarContatos
 
         Assert.False(valido);
         Assert.True(resultados.Count == 1 && resultados.Any(x => x.ErrorMessage.Contains("E-MAIL", StringComparison.OrdinalIgnoreCase)));
+    }
+    [Fact]
+    public void Validar_ddd_contato()
+    {
+        var contato = CriarContato();
+        contato.Ddd = 0;
+
+        var resultados = new List<ValidationResult>();
+        var valido = Validator.TryValidateObject(contato, new ValidationContext(contato), resultados, true);
+
+        Assert.False(valido);
+        Assert.True(resultados.Count == 1 && resultados.Any(x => x.ErrorMessage.Contains("DDD", StringComparison.OrdinalIgnoreCase)));
+    }
+    [Fact]
+    public void Inclusao_com_sucesso_contatos()
+    {
+        var contato = CriarContato();
+
+        var resultados = new List<ValidationResult>();
+        var valido = Validator.TryValidateObject(contato, new ValidationContext(contato), resultados, true);
+
+        Assert.True(valido);
+        Assert.True(resultados.Count == 0);
     }
 }

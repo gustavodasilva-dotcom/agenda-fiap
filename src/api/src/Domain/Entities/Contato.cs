@@ -1,29 +1,35 @@
-﻿namespace Agenda.FIAP.Api.Domain.Entities;
+﻿using Domain.Enum;
+
+namespace Agenda.FIAP.Api.Domain.Entities;
 
 public class Contato(
     int id,
     string nome,
     string telefone,
-    string email)
+    string email,
+    DDD ddd)
 {
     private Contato()
         : this(
               id: 0,
               nome: string.Empty,
               telefone: string.Empty,
-              email: string.Empty)
+              email: string.Empty,
+              ddd: DDD.SP)
     {
     }
 
     public Contato(
         string nome,
         string telefone,
-        string email)
+        string email,
+        DDD ddd)
         : this(
               id: 0,
               nome,
               telefone,
-              email)
+              email,
+              ddd)
     {
     }
 
@@ -34,4 +40,6 @@ public class Contato(
     public string Telefone { get; private set; } = telefone;
 
     public string Email { get; private set; } = email;
+
+    public DDD DDD { get; private set; } = ddd;
 }
