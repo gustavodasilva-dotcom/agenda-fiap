@@ -4,7 +4,7 @@ namespace Agenda.FIAP.Api.Domain.Abstractions;
 
 public interface IBaseRepository<TEntity> : IDisposable where TEntity : class
 {
-    TEntity ObterPorId(Expression<Func<TEntity, bool>> filtro);
+    TEntity Obter(Expression<Func<TEntity, bool>> filtro);
     
     List<TEntity> ObterTodos();
     

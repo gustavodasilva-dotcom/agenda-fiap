@@ -1,12 +1,12 @@
-﻿using Agenda.FIAP.Api.Domain.Abstractions;
-using Moq;
-using Agenda.FIAP.Api.Application.Contatos.Commands.AdicionarContatos;
+﻿using Agenda.FIAP.Api.Application.Contatos.Commands.AdicionarContatos;
 using Agenda.FIAP.Api.Application.Contracts.Requests;
-using Domain.Enum;
-using UnitTests.Utils;
+using Agenda.FIAP.Api.Domain.Abstractions;
+using Agenda.FIAP.Api.Domain.Enums;
+using Agenda.FIAP.Api.UnitTests.Utils;
 using FluentAssertions;
+using Moq;
 
-namespace UnitTests.Application
+namespace Agenda.FIAP.Api.UnitTests.Application
 {
     public class AdicionarContatos
     {
@@ -26,7 +26,7 @@ namespace UnitTests.Application
                     Nome = UnitTestUtils.GerarString(20),
                     Email = UnitTestUtils.GerarEmail(),
                     Telefone = UnitTestUtils.GerarString(8),
-                    Ddd = DDD.SP
+                    DDD = DDD.SP
                 }
             };
             var handler = new AdicionarContatosCommandHandler(_mockContatoRepository.Object);

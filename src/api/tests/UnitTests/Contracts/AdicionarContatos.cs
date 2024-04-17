@@ -1,9 +1,9 @@
 using Agenda.FIAP.Api.Application.Contracts.Requests;
-using Domain.Enum;
+using Agenda.FIAP.Api.Domain.Enums;
+using Agenda.FIAP.Api.UnitTests.Utils;
 using System.ComponentModel.DataAnnotations;
-using UnitTests.Utils;
 
-namespace Agenda.FIAP.Api.UnitTests;
+namespace Agenda.FIAP.Api.UnitTests.Contracts;
 
 public class AdicionarContatos
 {
@@ -12,7 +12,7 @@ public class AdicionarContatos
         Nome = UnitTestUtils.GerarString(20),
         Email = UnitTestUtils.GerarEmail(),
         Telefone = UnitTestUtils.GerarString(8),
-        Ddd = DDD.SP
+        DDD = DDD.SP
     };
 
     [Fact]
@@ -25,8 +25,9 @@ public class AdicionarContatos
         var valido = Validator.TryValidateObject(contato,new ValidationContext(contato), resultados,true);
 
         Assert.False(valido);
-        Assert.True(resultados.Count == 1 && resultados.Any(x => x.ErrorMessage.Contains("NOME", StringComparison.OrdinalIgnoreCase)));
+        Assert.True(resultados.Count == 1 && resultados.Any(x => x.ErrorMessage!.Contains("NOME", StringComparison.OrdinalIgnoreCase)));
     }
+
     [Fact]
     public void Validar_telefone_contato()
     {
@@ -37,8 +38,9 @@ public class AdicionarContatos
         var valido = Validator.TryValidateObject(contato, new ValidationContext(contato), resultados, true);
 
         Assert.False(valido);
-        Assert.True(resultados.Count == 1 && resultados.Any(x => x.ErrorMessage.Contains("TELEFONE", StringComparison.OrdinalIgnoreCase)));
+        Assert.True(resultados.Count == 1 && resultados.Any(x => x.ErrorMessage!.Contains("TELEFONE", StringComparison.OrdinalIgnoreCase)));
     }
+
     [Fact]
     public void Validar_email_contato()
     {
@@ -49,8 +51,9 @@ public class AdicionarContatos
         var valido = Validator.TryValidateObject(contato, new ValidationContext(contato), resultados,true);
 
         Assert.False(valido);
-        Assert.True(resultados.Count == 1 && resultados.Any(x => x.ErrorMessage.Contains("E-MAIL", StringComparison.OrdinalIgnoreCase)));
+        Assert.True(resultados.Count == 1 && resultados.Any(x => x.ErrorMessage!.Contains("E-MAIL", StringComparison.OrdinalIgnoreCase)));
     }
+
     [Fact]
     public void Validar_formato_email_contato()
     {
@@ -61,20 +64,22 @@ public class AdicionarContatos
         var valido = Validator.TryValidateObject(contato, new ValidationContext(contato), resultados,true);
 
         Assert.False(valido);
-        Assert.True(resultados.Count == 1 && resultados.Any(x => x.ErrorMessage.Contains("E-MAIL", StringComparison.OrdinalIgnoreCase)));
+        Assert.True(resultados.Count == 1 && resultados.Any(x => x.ErrorMessage!.Contains("E-MAIL", StringComparison.OrdinalIgnoreCase)));
     }
+
     [Fact]
     public void Validar_ddd_contato()
     {
         var contato = CriarContato();
-        contato.Ddd = 0;
+        contato.DDD = 0;
 
         var resultados = new List<ValidationResult>();
         var valido = Validator.TryValidateObject(contato, new ValidationContext(contato), resultados, true);
 
         Assert.False(valido);
-        Assert.True(resultados.Count == 1 && resultados.Any(x => x.ErrorMessage.Contains("DDD", StringComparison.OrdinalIgnoreCase)));
+        Assert.True(resultados.Count == 1 && resultados.Any(x => x.ErrorMessage!.Contains("DDD", StringComparison.OrdinalIgnoreCase)));
     }
+    
     [Fact]
     public void Inclusao_com_sucesso_contatos()
     {

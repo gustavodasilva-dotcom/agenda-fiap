@@ -13,6 +13,20 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         this.dataContext = dataContext;
     }
 
+    public TEntity Obter(Expression<Func<TEntity, bool>> filtro)
+    {
+        return dataContext.Set<TEntity>().SingleOrDefault(filtro);
+    }
+
+    public List<TEntity> ObterTodos()
+    {
+        List<TEntity> ret = dataContext.Set<TEntity>().ToList<TEntity>();
+
+        if (ret == null) ret = new List<TEntity>();
+
+        return ret;
+    }
+
     public void Adicionar(TEntity entity)
     {
         dataContext.Set<TEntity>().Add(entity);
@@ -28,6 +42,11 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         dataContext.Set<TEntity>().Update(entity);
     }
 
+    public void Excluir(TEntity entity)
+    {
+        dataContext.Remove(entity);
+    }
+
     public void Dispose()
     {
         try
@@ -38,24 +57,5 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         {
             throw;
         }
-    }
-
-    public void Excluir(TEntity entity)
-    {
-        dataContext.Remove(entity);
-    }
-
-    public TEntity ObterPorId(Expression<Func<TEntity, bool>> filtro)
-    {
-        return dataContext.Set<TEntity>().SingleOrDefault(filtro);
-    }
-
-    public List<TEntity> ObterTodos()
-    {
-        List<TEntity> ret = dataContext.Set<TEntity>().ToList<TEntity>();
-
-        if (ret == null) ret = new List<TEntity>();
-
-        return ret;
     }
 }

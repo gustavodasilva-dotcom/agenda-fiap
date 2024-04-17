@@ -9,18 +9,18 @@ namespace Agenda.FIAP.Api.Application.Contatos.Queries.ObterContatos;
 internal sealed class ObterContatosQueryHandler
     : IRequestHandler<ObterContatosQuery, IEnumerable<ContatoResponse>>
 {
-    private readonly IContatoRepository contatoRepository;
+    private readonly IContatoRepository _contatoRepository;
 
     public ObterContatosQueryHandler(IContatoRepository contatoRepository)
     {
-        this.contatoRepository = contatoRepository;
+        _contatoRepository = contatoRepository;
     }
 
     public Task<IEnumerable<ContatoResponse>> Handle(
         ObterContatosQuery request,
         CancellationToken cancellationToken)
     {
-        IEnumerable<Contato> contatos = contatoRepository.ObterPorFiltro(request.filtro.Ddd);
+        IEnumerable<Contato> contatos = _contatoRepository.ObterPorFiltro(request.DDD);
 
         var response = contatos.Adapt<IEnumerable<ContatoResponse>>();
 

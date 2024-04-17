@@ -25,11 +25,11 @@ internal sealed class AdicionarContatosCommandHandler
         foreach (var contato in request.Contatos)
         {
             contatos.Add(
-                new Contato(
+                Contato.CriarContato(
                     nome: contato.Nome,
                     telefone: contato.Telefone,
                     email: contato.Email,
-                    ddd: contato.Ddd));
+                    ddd: contato.DDD));
         }
 
         _contatoRepository.Adicionar(contatos);

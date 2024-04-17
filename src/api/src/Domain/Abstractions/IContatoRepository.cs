@@ -1,5 +1,5 @@
 ﻿using Agenda.FIAP.Api.Domain.Entities;
-using Domain.Enum;
+using Agenda.FIAP.Api.Domain.Enums;
 
 namespace Agenda.FIAP.Api.Domain.Abstractions;
 

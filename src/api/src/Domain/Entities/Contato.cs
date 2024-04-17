@@ -1,45 +1,79 @@
-﻿using Domain.Enum;
+﻿using Agenda.FIAP.Api.Domain.Enums;
 
 namespace Agenda.FIAP.Api.Domain.Entities;
 
-public class Contato(
-    int id,
-    string nome,
-    string telefone,
-    string email,
-    DDD ddd)
+public class Contato
 {
     private Contato()
-        : this(
-              id: 0,
-              nome: string.Empty,
-              telefone: string.Empty,
-              email: string.Empty,
-              ddd: 0)
     {
     }
 
-    public Contato(
+    private Contato(
+        string nome,
+        string telefone,
+        string email,
+        DDD ddd)
+    {
+        Nome = nome;
+        Telefone = telefone;
+        Email = email;
+        DDD = ddd;
+    }
+
+    private Contato(
+        int id,
         string nome,
         string telefone,
         string email,
         DDD ddd)
         : this(
-              id: 0,
-              nome,
-              telefone,
-              email,
-              ddd)
+            nome,
+            telefone,
+            email,
+            ddd)
     {
+        Id = id;
     }
 
-    public int Id { get; private set; } = id;
+    public int Id { get; private set; }
 
-    public string Nome { get; private set; } = nome;
+    public string Nome { get; private set; }
 
-    public string Telefone { get; private set; } = telefone;
+    public string Telefone { get; private set; }
 
-    public string Email { get; private set; } = email;
+    public string Email { get; private set; }
 
-    public DDD Ddd { get; private set; } = ddd;
+    public DDD DDD { get; private set; }
+
+    public static Contato CriarContato(
+        string nome,
+        string telefone,
+        string email,
+        DDD ddd)
+    {
+        var contato = new Contato(
+            nome.Trim(),
+            telefone.Trim(),
+            email.Trim(),
+            ddd);
+
+        return contato;
+    }
+
+    public static Contato AtualizarContato(
+        int id,
+        string nome,
+        string telefone,
+        string email,
+        DDD ddd)
+    {
+        var contato = new Contato(
+            id,
+            nome.Trim(),
+            telefone.Trim(),
+            email.Trim(),
+            ddd);
+
+        return contato;
+    }
 }

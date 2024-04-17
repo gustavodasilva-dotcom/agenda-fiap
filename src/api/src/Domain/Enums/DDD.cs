@@ -1,4 +1,4 @@
-﻿namespace Domain.Enum
+﻿namespace Agenda.FIAP.Api.Domain.Enums
 {
     public enum DDD
     {

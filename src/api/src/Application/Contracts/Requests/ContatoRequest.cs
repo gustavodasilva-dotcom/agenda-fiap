@@ -1,4 +1,4 @@
-﻿using Domain.Enum;
+﻿using Agenda.FIAP.Api.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Agenda.FIAP.Api.Application.Contracts.Requests;
@@ -16,5 +16,5 @@ public class ContatoRequest
     public string Email { get; set; }
 
     [EnumDataType(typeof(DDD), ErrorMessage = "DDD inválido.")]
-    public DDD Ddd { get; set; }
+    public DDD DDD { get; set; }
 }

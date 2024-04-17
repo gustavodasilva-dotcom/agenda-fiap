@@ -1,4 +1,4 @@
-﻿namespace UnitTests.Utils
+﻿namespace Agenda.FIAP.Api.UnitTests.Utils
 {
     public static class UnitTestUtils
     {
