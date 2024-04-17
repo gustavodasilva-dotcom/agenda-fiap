@@ -12,10 +12,18 @@ public class GetContatos : ICarterModule
     {
         app.MapGet("api/contatos", async (ContatoFiltroRequest filtro, ISender sender) =>
         {
-            var command = new ObterContatosQuery(filtro);
-
-            return Results.Ok(await sender.Send(command));
+            try
+            {
+                var command = new ObterContatosQuery(filtro);
+                var result = await sender.Send(command);
+                return Results.Ok(result);
+            }
+            catch
+            {
+                return Results.StatusCode(StatusCodes.Status500InternalServerError);
+            }
         })
         .WithTags(Tags.Contatos);
     }
 }
+
