@@ -2,7 +2,7 @@
 
 namespace Agenda.FIAP.Api.Domain.Entities;
 
-public class Contato
+public class Contato : IEquatable<Contato>
 {
     private Contato()
     {
@@ -20,21 +20,6 @@ public class Contato
         DDD = ddd;
     }
 
-    private Contato(
-        int id,
-        string nome,
-        string telefone,
-        string email,
-        DDD ddd)
-        : this(
-            nome,
-            telefone,
-            email,
-            ddd)
-    {
-        Id = id;
-    }
-
     public int Id { get; private set; }
 
     public string Nome { get; private set; }
@@ -44,6 +29,11 @@ public class Contato
     public string Email { get; private set; }
 
     public DDD DDD { get; private set; }
+
+    private IEnumerable<Contato> ObterValoresAtomicos()
+    {
+        yield return this;
+    }
 
     public static Contato CriarContato(
         string nome,
@@ -60,20 +50,39 @@ public class Contato
         return contato;
     }
 
-    public static Contato AtualizarContato(
-        int id,
+    public Contato AtualizarContato(
         string nome,
         string telefone,
         string email,
         DDD ddd)
     {
-        var contato = new Contato(
-            id,
-            nome.Trim(),
-            telefone.Trim(),
-            email.Trim(),
-            ddd);
+        Nome = nome.Trim();
+        Telefone = telefone.Trim();
+        Email = email.Trim();
+        DDD = ddd;
 
-        return contato;
+        return this;
+    }
+
+    public bool Equals(Contato? other)
+    {
+        return other is not null
+            && Nome.Trim().Equals(other.Nome.Trim())
+            && Telefone.Trim().Equals(other.Telefone.Trim())
+            && Email.Trim().Equals(other.Email.Trim())
+            && DDD.Equals(other.DDD);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return base.Equals(obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return ObterValoresAtomicos()
+            .Aggregate(
+                default(int),
+                HashCode.Combine);
     }
 }

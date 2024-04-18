@@ -11,9 +11,12 @@ namespace Agenda.FIAP.Api.UnitTests.Application
     public class AdicionarContatos
     {
         private readonly Mock<IContatoRepository> _mockContatoRepository;
+        private readonly Mock<IUnitOfWork> _mockUnitOfWork;
+
         public AdicionarContatos()
         {
             _mockContatoRepository = new();
+            _mockUnitOfWork = new();
         }
 
         [Fact]
@@ -29,11 +32,14 @@ namespace Agenda.FIAP.Api.UnitTests.Application
                     DDD = DDD.SP
                 }
             };
-            var handler = new AdicionarContatosCommandHandler(_mockContatoRepository.Object);
+            
+            var handler = new AdicionarContatosCommandHandler(
+                contatoRepository: _mockContatoRepository.Object,
+                unitOfWork: _mockUnitOfWork.Object);
 
             var resultado = await handler.Handle(new AdicionarContatosCommand(contatos), default);
 
-            resultado.Should().NotBeEmpty();
+            resultado.Value.Should().NotBeEmpty();
         }
     }
 }

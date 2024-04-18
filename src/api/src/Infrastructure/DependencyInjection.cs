@@ -16,6 +16,7 @@ public static class DependencyInjection
         services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("Database"));
 
         services.AddScoped<DataContext, DataContext>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IContatoRepository, ContatoRepository>();
 
         return services;

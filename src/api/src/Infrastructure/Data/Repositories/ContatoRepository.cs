@@ -20,9 +20,23 @@ internal sealed class ContatoRepository : BaseRepository<Contato>, IContatoRepos
     {
         var consulta = dataContext.Contato.AsNoTracking();
 
-        if(ddd > 0)
+        if (ddd > 0)
             consulta = consulta.Where(x => x.DDD == ddd);
 
         return consulta;
+    }
+
+    public Contato? ContatoExistenteComMesmoTelefone(string telefone)
+    {
+        return dataContext
+            .Contato
+            .FirstOrDefault(c => c.Telefone.Equals(telefone.Trim()));
+    }
+
+    public Contato? ContatoExistenteComMesmoEmail(string email)
+    {
+        return dataContext
+            .Contato
+            .FirstOrDefault(c => c.Email.Equals(email.Trim()));
     }
 }

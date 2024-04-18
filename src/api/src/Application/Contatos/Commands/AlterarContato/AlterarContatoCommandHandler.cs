@@ -1,45 +1,67 @@
 using Agenda.FIAP.Api.Application.Contracts.Responses;
+using Agenda.FIAP.Api.Application.Errors;
 using Agenda.FIAP.Api.Domain.Abstractions;
-using Agenda.FIAP.Api.Domain.Entities;
+using Agenda.FIAP.Api.Domain.Shared;
 using Mapster;
 using MediatR;
 
 namespace Agenda.FIAP.Api.Application.Contatos.Commands.AlterarContato;
 
 internal sealed class AlterarContatoCommandHandler
-    : IRequestHandler<AlterarContatoCommand, ContatoResponse>
+    : IRequestHandler<AlterarContatoCommand, Result<ContatoResponse, Error>>
 {
     private readonly IContatoRepository _contatoRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public AlterarContatoCommandHandler(IContatoRepository contatoRepository)
+    public AlterarContatoCommandHandler(
+        IContatoRepository contatoRepository,
+        IUnitOfWork unitOfWork)
     {
         _contatoRepository = contatoRepository;
+        _unitOfWork = unitOfWork;
     }
 
-    public Task<ContatoResponse> Handle(
+    public async Task<Result<ContatoResponse, Error>> Handle(
         AlterarContatoCommand request,
         CancellationToken cancellationToken)
     {
-        var contato = _contatoRepository.Obter(c => c.Id == request.Id);
+        var contatoTelefoneExistente = _contatoRepository
+            .ContatoExistenteComMesmoTelefone(request.Telefone);
 
-        if (contato is null)
+        if (contatoTelefoneExistente is not null &&
+            contatoTelefoneExistente.Id != request.Id)
         {
-            // TODO: criar Middleware e Exceptions customizadas ou criar retorno
-            // com operador implícito para retornar erros.
-            throw new Exception("Contato não encontrado");
+            return ApplicationErrors.ContatoExistenteComMesmoTelefone;
         }
 
-        var contatoAtualizado = Contato.AtualizarContato(
-            id: contato.Id,
+        var contatoEmailExistente = _contatoRepository
+            .ContatoExistenteComMesmoEmail(request.Email);
+
+        if (contatoEmailExistente is not null &&
+            contatoEmailExistente.Id != request.Id)
+        {
+            return ApplicationErrors.ContatoExistenteComMesmoEmail;
+        }
+
+        var contatoAtualizar = _contatoRepository.Obter(c => c.Id == request.Id);
+
+        if (contatoAtualizar is null)
+        {
+            return ApplicationErrors.ContatoNaoEncontrado;
+        }
+
+        contatoAtualizar.AtualizarContato(
             nome: request.Nome,
             telefone: request.Telefone,
             email: request.Email,
             ddd: request.DDD);
 
-        _contatoRepository.Alterar(contatoAtualizado);
+        _contatoRepository.Alterar(contatoAtualizar);
 
-        var response = contatoAtualizado.Adapt<ContatoResponse>();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Task.FromResult(response);
+        var response = contatoAtualizar.Adapt<ContatoResponse>();
+
+        return response;
     }
 }

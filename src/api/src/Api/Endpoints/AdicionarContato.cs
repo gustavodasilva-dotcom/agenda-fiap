@@ -29,7 +29,12 @@ public class AddContato : ICarterModule
             
             var result = await sender.Send(new AdicionarContatosCommand(contatos));
 
-            return Results.Created($"contatos", result);
+            if (result.IsFailure)
+            {
+                return Results.BadRequest(result.Error);
+            }
+
+            return Results.Created($"contatos", result.Value);
         })
         .WithTags(Tags.Contatos);
     }
