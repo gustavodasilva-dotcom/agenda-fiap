@@ -9,6 +9,7 @@ public class ContatoRequest
     public string Nome { get; set; }
 
     [Required(ErrorMessage = "O telefone é obrigatório")]
+    [Length(8, 9, ErrorMessage = "Numero do Telefone deve possuir 8 ou 9 caracteres")]
     public string Telefone { get; set; }
 
     [Required(ErrorMessage = "O e-mail é obrigatório")]

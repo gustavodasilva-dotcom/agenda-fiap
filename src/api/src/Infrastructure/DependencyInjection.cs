@@ -13,8 +13,6 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("Database"));
-
         services.AddScoped<DataContext, DataContext>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IContatoRepository, ContatoRepository>();

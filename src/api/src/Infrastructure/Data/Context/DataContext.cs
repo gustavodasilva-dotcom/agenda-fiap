@@ -1,17 +1,32 @@
 ﻿using Agenda.FIAP.Api.Domain.Entities;
+using Infrastructure.Data.Repositories.Configurations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Agenda.FIAP.Api.Infrastructure.Data.Context;
 
 public class DataContext : DbContext
 {
     public DataContext(DbContextOptions<DataContext> option)
-       : base(option) { }
+            : base(option) { }
+
+    public DataContext() { }
 
     public DbSet<Contato> Contato { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        modelBuilder.ApplyConfiguration(new ContatoConfiguration());
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+        
+        if (!optionsBuilder.IsConfigured) {
+
+            var configuration = new ConfigurationBuilder()
+           .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+           .AddJsonFile("appsettings.json").Build();
+
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+        }
     }
 }
