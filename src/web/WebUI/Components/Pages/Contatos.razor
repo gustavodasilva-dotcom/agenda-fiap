@@ -1,0 +1,52 @@
+﻿@page "/contatos"
+@inject HttpClient Http
+@attribute [StreamRendering]
+
+<PageTitle>Contatos</PageTitle>
+
+<h1>Contatos</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>Email</th>
+            <th>DDD</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var contato in contatosList)
+        {
+            <tr>
+                <td>@contato.Nome</td>
+                <td>@contato.Telefone</td>
+                <td>@contato.Email</td>
+                <td>@contato.DDD</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<Contact> contatosList = new List<Contact>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetContatos();
+    }
+
+    async Task GetContatos()
+    {
+        contatosList = await Http.GetFromJsonAsync<List<Contact>>("https://localhost:44336/api/contatos/11");
+    }
+
+    public class Contact
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public string Telefone { get; set; }
+        public string Email { get; set; }
+        public int DDD { get; set; }
+    }
+}
