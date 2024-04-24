@@ -1,10 +1,10 @@
 ﻿using Agenda.FIAP.Api.Application.Contracts.Responses;
-using Agenda.FIAP.Api.Application.Errors;
 using Agenda.FIAP.Api.Domain.Abstractions;
 using Agenda.FIAP.Api.Domain.Entities;
 using Agenda.FIAP.Api.Domain.Shared;
 using Mapster;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace Agenda.FIAP.Api.Application.Contatos.Commands.AdicionarContatos;
 
@@ -28,14 +28,28 @@ internal sealed class AdicionarContatosCommandHandler
     {
         List<Contato> contatos = [];
 
+        var resultadoValidacoes = new List<ValidationResult>();
+
         foreach (var contato in request.Contatos)
         {
+            if (!Validator.TryValidateObject(contato,
+                                             new ValidationContext(contato),
+                                             resultadoValidacoes,
+                                             validateAllProperties: true))
+            {
+                return new Error(
+                    "AdicionarContatos.Validacoes",
+                    string.Join("\n ", resultadoValidacoes.Select(v => v.ErrorMessage).ToArray()));
+            }
+
             var contatoTelefoneExistente = _contatoRepository
                 .ContatoExistenteComMesmoTelefone(contato.Telefone);
 
             if (contatoTelefoneExistente is not null)
             {
-                return ApplicationErrors.ContatoExistenteComMesmoTelefone;
+                return new Error(
+                    "AdicionarContatos.ContatoExistenteComMesmoTelefone",
+                    "Já existe um contato cadastro com telefone informado");
             }
 
             var contatoEmailExistente = _contatoRepository
@@ -43,7 +57,9 @@ internal sealed class AdicionarContatosCommandHandler
 
             if (contatoEmailExistente is not null)
             {
-                return ApplicationErrors.ContatoExistenteComMesmoEmail;
+                return new Error(
+                    "AdicionarContatos.ContatoExistenteComMesmoEmail",
+                    "Já existe um contato cadastro com e-mail informado");
             }
 
             var novoContato = Contato.CriarContato(
@@ -54,7 +70,9 @@ internal sealed class AdicionarContatosCommandHandler
 
             if (contatos.Any(c => c.Equals(novoContato)))
             {
-                return ApplicationErrors.NaoPermitidoCadastrarContatoRepetido;
+                return new Error(
+                    "AdicionarContatos.ContatoRepetido",
+                    "Não é permitido adicionar contatos repetidos");
             }
 
             contatos.Add(novoContato);

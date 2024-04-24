@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Agenda.FIAP.Api.Application.Contatos.Commands.AlterarContato;
 using Agenda.FIAP.Api.Application.Contracts.Requests;
 using Agenda.FIAP.Api.Constants;
@@ -17,22 +16,7 @@ public class AlterarContato : ICarterModule
             [FromBody] ContatoRequest request,
             ISender sender) =>
         {
-            var resultadoValidacoes = new List<ValidationResult>();
-
-            if (!Validator.TryValidateObject(request,
-                                             new ValidationContext(request),
-                                             resultadoValidacoes,
-                                             validateAllProperties: true))
-            {
-                return Results.BadRequest(resultadoValidacoes);
-            }
-
-            var command = new AlterarContatoCommand(
-                Id: id,
-                Nome: request.Nome,
-                Telefone: request.Telefone,
-                Email: request.Email,
-                DDD: request.DDD);
+            var command = new AlterarContatoCommand(id, request);
 
             var result = await sender.Send(command);
 
