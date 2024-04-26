@@ -91,4 +91,16 @@ public class ContatoRequestTest
         Assert.True(valido);
         Assert.True(resultados.Count == 0);
     }
+    [Fact]
+    public void Validar_telefone_tamanho_contato()
+    {
+        var contato = CriarContato();
+        contato.Telefone = UnitTestUtils.GerarString(10);
+
+        var resultados = new List<ValidationResult>();
+        var valido = Validator.TryValidateObject(contato, new ValidationContext(contato), resultados, true);
+
+        Assert.False(valido);
+        Assert.True(resultados.Count == 1 && resultados.Any(x => x.ErrorMessage!.Contains("TELEFONE", StringComparison.OrdinalIgnoreCase)));
+    }
 }
