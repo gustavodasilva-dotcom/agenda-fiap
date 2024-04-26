@@ -8,10 +8,10 @@ using Moq;
 
 namespace Agenda.FIAP.Api.UnitTests.Application
 {
-    public class ObterContatos
+    public class ObterContatosTest
     {
         private readonly Mock<IContatoRepository> _mockContatoRepository;
-        public ObterContatos()
+        public ObterContatosTest()
         {
             _mockContatoRepository = new Mock<IContatoRepository>();         
         }

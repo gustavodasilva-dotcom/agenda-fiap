@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Agenda.FIAP.Api.UnitTests.Contracts;
 
-public class AdicionarContatos
+public class ContatoRequestTest
 {
     private ContatoRequest CriarContato() => new()
     {
