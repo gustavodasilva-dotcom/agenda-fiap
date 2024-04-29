@@ -8,18 +8,16 @@ public class Contato : IEquatable<Contato>
     {
     }
 
-    internal Contato(
+    private Contato(
         string nome,
         string telefone,
         string email,
-        DDD ddd,
-        int id = 0)
+        DDD ddd)
     {
         Nome = nome;
         Telefone = telefone;
         Email = email;
         DDD = ddd;
-        Id = id;
     }
 
     public int Id { get; private set; }

@@ -24,7 +24,7 @@ namespace UnitTests.Application
         public async Task Validar_handler_alterar_contato()
         {
             var contatoEntidade =
-                new Contato(
+                Contato.CriarContato(
                     UnitTestUtils.GerarString(20),
                     UnitTestUtils.GerarString(8),
                     UnitTestUtils.GerarEmail(),
@@ -55,12 +55,11 @@ namespace UnitTests.Application
         public async Task Validar_handler_alterar_contato_mesmo_telefone()
         {
             var contatoEntidade =
-                new Contato(
+                Contato.CriarContato(
                     UnitTestUtils.GerarString(20),
                     UnitTestUtils.GerarString(8),
                     UnitTestUtils.GerarEmail(),
-                    DDD.SP,
-                    1);
+                    DDD.SP);
 
             _mockContatoRepository.Setup(s => s.ContatoExistenteComMesmoTelefone(
                     It.Is<string>(x => x == contatoEntidade.Telefone)))
@@ -90,12 +89,11 @@ namespace UnitTests.Application
         public async Task Validar_handler_alterar_contato_mesmo_email()
         {
             var contatoEntidade =
-                new Contato(
+                Contato.CriarContato(
                     UnitTestUtils.GerarString(20),
                     UnitTestUtils.GerarString(8),
                     UnitTestUtils.GerarEmail(),
-                    DDD.SP,
-                    1);
+                    DDD.SP);
 
             _mockContatoRepository.Setup(s => s.ContatoExistenteComMesmoEmail(
                     It.Is<string>(x => x == contatoEntidade.Email)))
