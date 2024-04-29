@@ -24,7 +24,7 @@ namespace UnitTests.Application
         public async Task Validar_handler_alterar_contato()
         {
             var contatoEntidade =
-                Contato.CriarContato(
+                new Contato(
                     UnitTestUtils.GerarString(20),
                     UnitTestUtils.GerarString(8),
                     UnitTestUtils.GerarEmail(),
@@ -55,11 +55,12 @@ namespace UnitTests.Application
         public async Task Validar_handler_alterar_contato_mesmo_telefone()
         {
             var contatoEntidade =
-                Contato.CriarContato(
+                new Contato(
                     UnitTestUtils.GerarString(20),
                     UnitTestUtils.GerarString(8),
                     UnitTestUtils.GerarEmail(),
-                    DDD.SP);
+                    DDD.SP,
+                    1);
 
             _mockContatoRepository.Setup(s => s.ContatoExistenteComMesmoTelefone(
                     It.Is<string>(x => x == contatoEntidade.Telefone)))
@@ -78,9 +79,10 @@ namespace UnitTests.Application
                 contatoRepository: _mockContatoRepository.Object,
                 unitOfWork: _mockUnitOfWork.Object);
 
-                var resultado = await handler.Handle(new AlterarContatoCommand(1, contatos), default);
+                var resultado = await handler.Handle(new AlterarContatoCommand(2, contatos), default);
 
                 Assert.True(resultado.IsFailure, "Alterou um contato com o mesmo telefone.");
+                Assert.Contains(resultado.Error.Code, "AlterarContato.ContatoExistenteComMesmoTelefone");
             }
         }
 
@@ -88,11 +90,12 @@ namespace UnitTests.Application
         public async Task Validar_handler_alterar_contato_mesmo_email()
         {
             var contatoEntidade =
-                Contato.CriarContato(
+                new Contato(
                     UnitTestUtils.GerarString(20),
                     UnitTestUtils.GerarString(8),
                     UnitTestUtils.GerarEmail(),
-                    DDD.SP);
+                    DDD.SP,
+                    1);
 
             _mockContatoRepository.Setup(s => s.ContatoExistenteComMesmoEmail(
                     It.Is<string>(x => x == contatoEntidade.Email)))
@@ -111,9 +114,10 @@ namespace UnitTests.Application
                 contatoRepository: _mockContatoRepository.Object,
                 unitOfWork: _mockUnitOfWork.Object);
 
-                var resultado = await handler.Handle(new AlterarContatoCommand(0, contatos), default);
+                var resultado = await handler.Handle(new AlterarContatoCommand(2, contatos), default);
 
                 Assert.True(resultado.IsFailure, "Alterou um contato com mesmo email.");
+                Assert.Contains(resultado.Error.Code, "AlterarContato.ContatoExistenteComMesmoEmail");
             }
         }
 
