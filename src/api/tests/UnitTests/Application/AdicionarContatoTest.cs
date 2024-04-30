@@ -77,6 +77,7 @@ namespace Agenda.FIAP.Api.UnitTests.Application
             Assert.True(resultado.IsFailure, "Adicinou um contato com email existente.");
             Assert.Contains(resultado.Error.Code, "AdicionarContatos.ContatoExistenteComMesmoEmail");
         }
+
         [Fact]
         public async Task Validar_handler_adicionar_contato_com_telefone_existente()
         {
@@ -111,6 +112,7 @@ namespace Agenda.FIAP.Api.UnitTests.Application
             Assert.True(resultado.IsFailure, "Adicinou um contato com email existente.");
             Assert.Contains(resultado.Error.Code, "AdicionarContatos.ContatoExistenteComMesmoTelefone");
         }
+        
         [Fact]
         public async Task Validar_handler_adicionar_contato_repetido()
         {

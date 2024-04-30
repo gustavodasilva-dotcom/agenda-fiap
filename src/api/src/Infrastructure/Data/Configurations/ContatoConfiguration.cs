@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Data.Repositories.Configurations
+namespace Agenda.FIAP.Api.Infrastructure.Data.Configurations
 {
     public class ContatoConfiguration : IEntityTypeConfiguration<Contato>
     {
-        public void Configure(EntityTypeBuilder<Contato> builder) {
-
+        public void Configure(EntityTypeBuilder<Contato> builder)
+        {
             builder.ToTable(nameof(Contato));
             builder.HasKey(c => c.Id);
             builder.Property(p => p.Id).HasColumnType("int");

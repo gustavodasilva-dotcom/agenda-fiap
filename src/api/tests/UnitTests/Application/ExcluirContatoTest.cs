@@ -6,7 +6,7 @@ using Agenda.FIAP.Api.UnitTests.Utils;
 using Moq;
 using System.Linq.Expressions;
 
-namespace UnitTests.Application
+namespace Agenda.FIAP.Api.UnitTests.Application
 {
     public class ExcluirContatoTest
     {
@@ -41,6 +41,7 @@ namespace UnitTests.Application
                 Assert.True(resultado.IsSuccess, "Não excluiu um contato.");
             }
         }
+        
         [Fact]
         public async Task Validar_handler_excluir_contato_inexistente()
         {

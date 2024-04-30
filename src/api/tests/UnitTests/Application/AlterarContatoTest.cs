@@ -7,7 +7,7 @@ using Agenda.FIAP.Api.UnitTests.Utils;
 using Moq;
 using System.Linq.Expressions;
 
-namespace UnitTests.Application
+namespace Agenda.FIAP.Api.UnitTests.Application
 {
     public class AlterarContatoTest
     {

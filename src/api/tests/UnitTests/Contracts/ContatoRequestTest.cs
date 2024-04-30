@@ -91,6 +91,7 @@ public class ContatoRequestTest
         Assert.True(valido);
         Assert.True(resultados.Count == 0);
     }
+    
     [Fact]
     public void Validar_telefone_tamanho_contato()
     {
