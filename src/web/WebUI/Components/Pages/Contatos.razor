@@ -50,12 +50,6 @@
         contatosList = await ContatosService.GetContatosAsync();
     }
 
-    // private void EditarContato(ContatoModel contato)
-    // {
-    //     // Implemente a lógica para redirecionar para a página de edição do contato
-    //     NavigationManager.NavigateTo($"/editar-contato/{contato.Id}");
-    // }
-
     private async Task ExcluirContato(ContatoModel contato)
     {
         bool sucesso = await ContatosService.ExcluirContatoAsync(contato.Id);
