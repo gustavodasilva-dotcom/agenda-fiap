@@ -1,9 +1,5 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using WebUI.Client.Pages;
 using WebUI.Components;
-using System;
-using System.Net.Http;
+using WebUI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +9,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddScoped<HttpClient>();
+builder.Services.AddScoped<ContatosService>(); // Adicione o serviço ContatosService ao contêiner de injeção de dependência
 
 var app = builder.Build();
 
