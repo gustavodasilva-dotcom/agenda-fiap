@@ -1,4 +1,5 @@
 using WebUI.Components;
+using WebUI.Model;
 using WebUI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,8 +9,15 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
-builder.Services.AddScoped<HttpClient>();
-builder.Services.AddScoped<ContatosService>(); // Adicione o serviço ContatosService ao contêiner de injeção de dependência
+builder.Services.AddTransient<ContatosService>(); // Adicione o serviço ContatosService ao contêiner de injeção de dependência
+
+builder.Services.AddHttpClient(
+    HttpClientNames.MyApiContatos,
+    x =>
+    {
+        x.BaseAddress = new Uri(builder.Configuration.GetSection("API").Value);
+    }
+);
 
 var app = builder.Build();
 
