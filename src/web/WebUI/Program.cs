@@ -9,7 +9,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddScoped<HttpClient>();
-builder.Services.AddScoped<ContatosService>(); // Adicione o serviço ContatosService ao contêiner de injeção de dependência
+builder.Services.AddScoped<ContatosService>();
 
 var app = builder.Build();
 
