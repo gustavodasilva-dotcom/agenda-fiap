@@ -1,0 +1,109 @@
+﻿@page "/contatos"
+@page "/contatos/{Ddd:int}"
+
+@using Agenda.FIAP.Api.Domain.Enums
+@using System.ComponentModel.DataAnnotations
+@using System.Reflection
+@using WebUI.Models
+@using WebUI.Services
+@inject NavigationManager NavigationManager
+@inject ContatosService ContatosService
+
+<PageTitle>Contatos</PageTitle>
+
+<h1>Contatos</h1>
+
+<div class="form-group mb-5">
+    <label for="enumSelect">DDD:</label>
+
+    <div class="row">
+        <div class="col-11">
+            <select id="enumSelect" class="form-control" @bind="DddSelecionado">
+                @foreach (DDD enumValue in Enum.GetValues(typeof(DDD)))
+                {
+                    <option value="@enumValue">@GetEnumDisplayName(enumValue)</option>
+                }
+            </select>
+        </div>
+        
+        <div class="col-1">
+            <button class="btn btn-primary" @onclick=CarregarContatosDddAsync>Carregar</button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="form-group">
+    <div class="mb-3">
+        <a class="btn btn-primary" href="/adicionar-contato">Novo Contato</a>
+    </div>
+</div>
+
+<div class="form-group">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Email</th>
+                <th>DDD</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contato in contatosList)
+            {
+                <tr>
+                    <td>@contato.Nome</td>
+                    <td>@contato.Telefone</td>
+                    <td>@contato.Email</td>
+                    <td>@contato.DDD</td>
+                    <td>
+                        <button class="btn btn-primary">Editar</button>
+                        <button class="btn btn-danger" @onclick="() => ExcluirContato(contato)">Excluir</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int? Ddd { get; set; }
+
+    public DDD DddSelecionado { get; set; }
+
+    List<ContatoModel> contatosList = new List<ContatoModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        contatosList = await ContatosService.GetContatosAsync(Ddd);
+    }
+
+    private async Task ExcluirContato(ContatoModel contato)
+    {
+        bool sucesso = await ContatosService.ExcluirContatoAsync(contato.Id);
+
+        contatosList = await ContatosService.GetContatosAsync(Ddd);
+
+    }
+
+    private async Task CarregarContatosDddAsync()
+    {
+        contatosList = await ContatosService.GetContatosAsync((int?) DddSelecionado);
+    }
+
+    private string GetEnumDisplayName(DDD value)
+    {
+        return value.GetType()
+                    .GetMember(value.ToString())
+                    .First()
+                    .GetCustomAttribute<DisplayAttribute>()?
+                    .GetName() ?? value.ToString();
+    }
+}
