@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using WebUI.Models;
+using WebUIAgenda.Services.Responses;
 
 namespace WebUI.Services
 {
@@ -31,29 +32,55 @@ namespace WebUI.Services
                 return [];
         }
 
-        public async Task<bool> AdicionarContatoAsync(List<ContatoModel> novosContatos)
+        public async Task<BaseResponse> AdicionarContatoAsync(List<ContatoModel> novosContatos)
         {
-            var client = _httpClientFactory.CreateClient(HttpClientNames.MyApiContatos);
+            var result = new BaseResponse();
 
+            var client = _httpClientFactory.CreateClient(HttpClientNames.MyApiContatos);
             var response = await client.PostAsJsonAsync("api/contatos/", novosContatos);
 
-            if (response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
-                return true;
+                var responseContent = await response.Content.ReadFromJsonAsync<BaseResponse>();
+
+                result.FailWithMessage(responseContent!.Message);
             }
-            else
-            {
-                return false;
-            }
+
+            return result;
         }
 
-        public async Task<bool> ExcluirContatoAsync(int id)
+        public async Task<BaseResponse> AlterarContatoAsync(ContatoModel contato)
         {
-            var client = _httpClientFactory.CreateClient("AgendaApi");
+            var result = new BaseResponse();
 
-            var response = await client.DeleteAsync($"https://localhost:44336/api/contatos/{id}");
+            var client = _httpClientFactory.CreateClient(HttpClientNames.MyApiContatos);
+            var response = await client.PutAsJsonAsync($"api/contatos/{contato.Id}", contato);
 
-            return response.IsSuccessStatusCode;
+            if (!response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadFromJsonAsync<BaseResponse>();
+
+                result.FailWithMessage(responseContent!.Message);
+            }
+
+            return result;
+        }
+
+        public async Task<BaseResponse> ExcluirContatoAsync(int id)
+        {
+            var result = new BaseResponse();
+
+            var client = _httpClientFactory.CreateClient(HttpClientNames.MyApiContatos);
+            var response = await client.DeleteAsync($"api/contatos/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadFromJsonAsync<BaseResponse>();
+
+                result.FailWithMessage(responseContent!.Message);
+            }
+
+            return result;
         }
     }
 }

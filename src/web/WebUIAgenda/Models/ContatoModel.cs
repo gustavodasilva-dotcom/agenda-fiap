@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Agenda.FIAP.Api.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebUI.Models
 {
@@ -6,15 +7,19 @@ namespace WebUI.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Nome é obrigatório")]
+        [StringLength(100, ErrorMessage = "Máximo de 100 caracteres")]
         public string Nome { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Telefone é obrigatório")]
+        [StringLength(100, ErrorMessage = "Máximo de 100 caracteres")]
         public string Telefone { get; set; }
 
-        [Required]
-        public int DDD { get; set; }
+        [Required(ErrorMessage = "DDD é obrigatório")]
+        public DDD? DDD { get; set; }
 
+        [Required(ErrorMessage = "E-mail é obrigatório")]
+        [EmailAddress(ErrorMessage = "Endereço de e-mail inválido")]
         public string Email { get; set; }
 
     }

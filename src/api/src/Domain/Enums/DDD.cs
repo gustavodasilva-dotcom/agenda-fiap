@@ -13,7 +13,7 @@
         SP_AmericanaCampinasLimeiraPiracicabaRioClaroSaoJoaodaBoaVista = 19,
         RJ = 21,
         RJ_CaboFrioCamposdosGoytacazesItaperunaMacaeNovaFriburgo = 22,
-        RJ_AngradosReisPetropolisVoltaRedondaPirai = 23,
+        RJ_AngradosReisPetropolisVoltaRedondaPirai = 24,
         ES = 27,
         ES_CachoeirodeItapemirimCasteloItapemirimMarataizes = 28,
         MG = 31,
