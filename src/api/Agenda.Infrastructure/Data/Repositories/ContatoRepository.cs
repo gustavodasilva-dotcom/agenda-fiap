@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Agenda.Infrastructure.Data.Repositories;
 
-internal sealed class ContatoRepository : BaseRepository<Contato>, IContatoRepository
+public sealed class ContatoRepository : BaseRepository<Contato>, IContatoRepository
 {
     private readonly DataContext dataContext;
 
