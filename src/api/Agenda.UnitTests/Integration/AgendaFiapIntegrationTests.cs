@@ -1,8 +1,6 @@
 ﻿using Agenda.Application.Contatos.Commands.AdicionarContatos;
 using Agenda.Application.Contracts.Requests;
 using Agenda.Common.Enums;
-using Agenda.Domain.Abstractions;
-using Agenda.Domain.Entities;
 using Agenda.Infrastructure.Data.Context;
 using Agenda.Infrastructure.Data.Repositories;
 using Agenda.UnitTests.Utils;
@@ -21,9 +19,9 @@ namespace Agenda.UnitTests.Integration
             _dbContextOptions = new DbContextOptionsBuilder<DataContext>()
                 .UseSqlServer(_dockerFixture.GetConnectionString("AgendaFiapTest"), options =>
                     options.EnableRetryOnFailure(
-                        maxRetryCount: 5, // Número máximo de tentativas
-                        maxRetryDelay: TimeSpan.FromSeconds(10), // Atraso máximo entre tentativas
-                        errorNumbersToAdd: null)) // Erros adicionais a serem tratados como transitórios
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(10), 
+                        errorNumbersToAdd: null)) 
                 .Options;
 
             using (var context = new DataContext(_dbContextOptions)) {

@@ -1,6 +1,5 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
-using System.Data.SqlClient;
 
 namespace Agenda.UnitTests.Integration
 {
@@ -17,14 +16,14 @@ namespace Agenda.UnitTests.Integration
                 Env = new List<string>
                 {
                     "ACCEPT_EULA=Y",
-                    "SA_PASSWORD=YourStrong!Passw0rd" // Defina a senha do administrador
+                    "SA_PASSWORD=YourStrong!Passw0rd" 
                 },
                 HostConfig = new HostConfig {
                     PortBindings = new Dictionary<string, IList<PortBinding>>
                     {
                         { "1433/tcp", new List<PortBinding> { new PortBinding { HostPort = "1433" } } }
                     },
-                    PublishAllPorts = true // Opcional: Define como verdadeiro se você quiser publicar todas as portas expostas
+                    PublishAllPorts = true 
                 }
             }).GetAwaiter().GetResult();
 
