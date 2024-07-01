@@ -4,6 +4,21 @@ using Agenda.Api.Middlewares;
 using Agenda.Application;
 using Agenda.Infrastructure;
 using Carter;
+using Prometheus;
+
+
+//#region Configuracao para Collector
+//var runtimeStatitics = DotNetRuntimeStatsBuilder.Default();
+//runtimeStatitics = DotNetRuntimeStatsBuilder.Customize()
+//    .WithContentionStats(CaptureLevel.Informational)
+//    .WithGcStats(CaptureLevel.Verbose)
+//    .WithThreadPoolStats(CaptureLevel.Informational)
+//    .WithExceptionStats(CaptureLevel.Errors)
+//    .WithJitStats();
+
+//runtimeStatitics.RecycleCollectorsEvery(new TimeSpan(0, 20, 0));
+//#endregion
+//IDisposable Collector = runtimeStatitics.StartCollecting();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +32,8 @@ builder.Services.AddExceptionHandler<ExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 builder.Services.AddCarter();
+
+builder.Services.UseHttpClientMetrics();
 
 builder.Services.AddCors(options =>
 {
@@ -43,6 +60,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseExceptionHandler();
+
+app.UseMetricServer();
+app.UseHttpMetrics();
 
 app.MapCarter();
 
