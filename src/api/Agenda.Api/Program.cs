@@ -6,20 +6,6 @@ using Agenda.Infrastructure;
 using Carter;
 using Prometheus;
 
-
-//#region Configuracao para Collector
-//var runtimeStatitics = DotNetRuntimeStatsBuilder.Default();
-//runtimeStatitics = DotNetRuntimeStatsBuilder.Customize()
-//    .WithContentionStats(CaptureLevel.Informational)
-//    .WithGcStats(CaptureLevel.Verbose)
-//    .WithThreadPoolStats(CaptureLevel.Informational)
-//    .WithExceptionStats(CaptureLevel.Errors)
-//    .WithJitStats();
-
-//runtimeStatitics.RecycleCollectorsEvery(new TimeSpan(0, 20, 0));
-//#endregion
-//IDisposable Collector = runtimeStatitics.StartCollecting();
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
