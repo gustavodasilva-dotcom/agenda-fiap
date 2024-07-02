@@ -4,14 +4,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{2B14975D-4760-4123-BF30-2E98ECD80CC0}"
-	ProjectSection(SolutionItems) = preProject
-		api\README.md = api\README.md
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "web", "web", "{7E7A775F-6668-469A-9762-191F6C5C7B8E}"
-	ProjectSection(SolutionItems) = preProject
-		web\README.md = web\README.md
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{86332DCF-FAA9-4EE3-BECE-8AEB8A963ECC}"
 EndProject
@@ -28,11 +22,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agenda.Infrastructure", "api\Agenda.Infrastructure\Agenda.Infrastructure.csproj", "{5810EB3F-E7ED-427F-8E7E-9564C8DAB7D2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agenda.UnitTests", "api\Agenda.UnitTests\Agenda.UnitTests.csproj", "{150A0554-4AD5-4599-9D9E-323FD31C8912}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Itens de Solução", "Itens de Solução", "{1B2722A6-6AB6-4EC8-BD8C-35D7684E9425}"
-	ProjectSection(SolutionItems) = preProject
-		solutionItems\prometheus.yml = solutionItems\prometheus.yml
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
