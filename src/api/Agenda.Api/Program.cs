@@ -4,6 +4,7 @@ using Agenda.Api.Middlewares;
 using Agenda.Application;
 using Agenda.Infrastructure;
 using Carter;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,8 @@ builder.Services.AddExceptionHandler<ExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 builder.Services.AddCarter();
+
+builder.Services.UseHttpClientMetrics();
 
 builder.Services.AddCors(options =>
 {
@@ -43,6 +46,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseExceptionHandler();
+
+app.UseMetricServer();
+app.UseHttpMetrics();
 
 app.MapCarter();
 
