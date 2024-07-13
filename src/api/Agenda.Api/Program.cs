@@ -47,3 +47,5 @@ app.UseExceptionHandler();
 app.MapCarter();
 
 app.Run();
+
+public partial class Program { }
