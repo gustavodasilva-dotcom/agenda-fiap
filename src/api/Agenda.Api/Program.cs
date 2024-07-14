@@ -6,52 +6,58 @@ using Agenda.Infrastructure;
 using Carter;
 using Prometheus;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace Agenda.Api;
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddApplication();
-
-builder.Services.AddExceptionHandler<ExceptionHandler>();
-builder.Services.AddProblemDetails();
-
-builder.Services.AddCarter();
-
-builder.Services.UseHttpClientMetrics();
-
-builder.Services.AddCors(options =>
+public partial class Program
 {
-    options.AddPolicy(
-        Cors.Policy,
-        policy => policy
-            .AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod());
-});
+    private static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-var app = builder.Build();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
-app.UseCors(Cors.Policy);
+        builder.Services.AddInfrastructure(builder.Configuration);
+        builder.Services.AddApplication();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+        builder.Services.AddExceptionHandler<ExceptionHandler>();
+        builder.Services.AddProblemDetails();
 
-    app.ApplyMigrations();
+        builder.Services.AddCarter();
+
+        builder.Services.UseHttpClientMetrics();
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(
+                Cors.Policy,
+                policy => policy
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+        });
+
+        var app = builder.Build();
+
+        app.UseCors(Cors.Policy);
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
+            app.ApplyMigrations();
+        }
+
+        app.UseHttpsRedirection();
+
+        app.UseExceptionHandler();
+
+        app.UseMetricServer();
+        app.UseHttpMetrics();
+
+        app.MapCarter();
+
+        app.Run();
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseExceptionHandler();
-
-app.UseMetricServer();
-app.UseHttpMetrics();
-
-app.MapCarter();
-
-app.Run();
-
-public partial class Program { }

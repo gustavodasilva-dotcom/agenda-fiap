@@ -1,4 +1,5 @@
-﻿using Agenda.Infrastructure.Data.Context;
+﻿using Agenda.Api;
+using Agenda.Infrastructure.Data.Context;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
