@@ -1,18 +1,20 @@
 using Agenda.Infrastructure.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Agenda.Api.Extensions
-{
-    public static class MigrationExtensions
-    {
-        public static void ApplyMigrations(this WebApplication app) {
-            using var scope = app.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.
-                GetRequiredService<DataContext>();
+namespace Agenda.Api.Extensions;
 
-            if (dbContext.Database.IsRelational()) {
-                dbContext.Database.Migrate();
-            }
+public static class MigrationExtensions
+{
+    public static void ApplyMigrations(this WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+        
+        var dbContext = scope.ServiceProvider.
+            GetRequiredService<DataContext>();
+
+        if (dbContext.Database.IsRelational())
+        {
+            dbContext.Database.Migrate();
         }
     }
 }
