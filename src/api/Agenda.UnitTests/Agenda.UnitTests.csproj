@@ -11,9 +11,12 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="Docker.DotNet" Version="3.125.15" />
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Moq" Version="4.20.70" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
     <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
   </ItemGroup>
@@ -26,6 +29,7 @@
     <ProjectReference Include="..\Agenda.Application\Agenda.Application.csproj" />
     <ProjectReference Include="..\Agenda.Domain\Agenda.Domain.csproj" />
     <ProjectReference Include="..\..\common\Agenda.Common\Agenda.Common.csproj" />
+    <ProjectReference Include="..\Agenda.Infrastructure\Agenda.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

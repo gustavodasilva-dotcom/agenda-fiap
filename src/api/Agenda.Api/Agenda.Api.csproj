@@ -31,4 +31,8 @@
     <ProjectReference Include="..\..\common\Agenda.Common\Agenda.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Agenda.IntegrationTests" />
+  </ItemGroup>
+
 </Project>

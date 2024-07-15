@@ -18,6 +18,12 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Agenda.IntegrationTests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
 	<ItemGroup>
 	  <ProjectReference Include="..\Agenda.Domain\Agenda.Domain.csproj" />
 	  <ProjectReference Include="..\..\common\Agenda.Common\Agenda.Common.csproj" />
