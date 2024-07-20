@@ -17,7 +17,6 @@ public sealed class AgendaFiapIntegrationTests
     {
         await using var application = new CustomWebApplicationFactory();
 
-        await ContatoMockData.CreateCategories(application, true);
         var client = application.CreateClient();
 
         var novoContato = new ContatoRequest
