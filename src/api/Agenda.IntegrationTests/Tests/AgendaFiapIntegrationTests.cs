@@ -46,7 +46,7 @@ public sealed class AgendaFiapIntegrationTests
     {
         await using var application = new CustomWebApplicationFactory();
 
-        await ContatoMockData.CreateCategories(application, true);
+        await ContatoMockData.CreateContatos(application, true);
         var client = application.CreateClient();
 
         var contatoAtualizado = new ContatoRequest
@@ -76,7 +76,7 @@ public sealed class AgendaFiapIntegrationTests
     {
         await using var application = new CustomWebApplicationFactory();
 
-        await ContatoMockData.CreateCategories(application, true);
+        await ContatoMockData.CreateContatos(application, true);
         var client = application.CreateClient();
 
         var deleteResponse = await client.DeleteAsync($"/api/contatos/{1}");
@@ -98,7 +98,7 @@ public sealed class AgendaFiapIntegrationTests
     {
         await using var application = new CustomWebApplicationFactory();
 
-        await ContatoMockData.CreateCategories(application, true);
+        await ContatoMockData.CreateContatos(application, true);
         var client = application.CreateClient();
 
         var ddd = DDDs.SP;
