@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.2.5" />
+    <PackageReference Include="MassTransit.RabbitMq" Version="8.2.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Agenda.Common.Helpers\Agenda.Common.Helpers.csproj" />
+    <ProjectReference Include="..\..\Modules\Contatos\Modules.Contatos.CrossCutting.DependencyInjection\Modules.Contatos.CrossCutting.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\Modules\Contatos\Modules.Contatos.Endpoints\Modules.Contatos.Endpoints.csproj" />
+    <ProjectReference Include="..\..\Modules\Contatos\Modules.Contatos.Persistence\Modules.Contatos.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>
