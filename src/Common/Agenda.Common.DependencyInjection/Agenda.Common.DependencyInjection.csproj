@@ -17,6 +17,7 @@
     <ProjectReference Include="..\..\Modules\Contatos\Modules.Contatos.CrossCutting.DependencyInjection\Modules.Contatos.CrossCutting.DependencyInjection.csproj" />
     <ProjectReference Include="..\..\Modules\Contatos\Modules.Contatos.Endpoints\Modules.Contatos.Endpoints.csproj" />
     <ProjectReference Include="..\..\Modules\Contatos\Modules.Contatos.Persistence\Modules.Contatos.Persistence.csproj" />
+    <ProjectReference Include="..\..\Modules\Eventos\Modules.Eventos.CrossCutting.DependencyInjection\Modules.Eventos.CrossCutting.DependencyInjection.csproj" />
   </ItemGroup>
 
 </Project>

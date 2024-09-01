@@ -1,6 +1,8 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Agenda.Modules.Contatos.Persistence;
 
@@ -22,6 +24,13 @@ public class ContatosDbContextFactory : IDesignTimeDbContextFactory<ContatosDbCo
 
         optionsBuilder.UseSqlServer(connectionString);
 
-        return new ContatosDbContext(optionsBuilder.Options);
+        var services = new ServiceCollection();
+        services.AddTransient<IPublisher>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var publisher = serviceProvider.GetRequiredService<IPublisher>();
+
+        return new ContatosDbContext(optionsBuilder.Options, publisher);
     }
 }

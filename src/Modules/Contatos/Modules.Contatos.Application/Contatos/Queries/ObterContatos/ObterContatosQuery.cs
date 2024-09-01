@@ -1,4 +1,4 @@
-﻿using Agenda.Common.Enums;
+﻿using Agenda.Common.Shared.Enums;
 using Agenda.Modules.Contatos.Application.Contracts.Responses;
 using MediatR;
 

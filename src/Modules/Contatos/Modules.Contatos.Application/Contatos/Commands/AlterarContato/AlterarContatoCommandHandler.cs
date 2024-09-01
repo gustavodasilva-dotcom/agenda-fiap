@@ -1,15 +1,17 @@
 using Agenda.Common.Shared;
+using Agenda.Common.Shared.Abstractions;
 using Agenda.Modules.Contatos.Application.Contracts.Responses;
 using Agenda.Modules.Contatos.Domain.Abstractions;
 using Mapster;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel.DataAnnotations;
 
 namespace Agenda.Modules.Contatos.Application.Contatos.Commands.AlterarContato;
 
 internal sealed class AlterarContatoCommandHandler(
     IContatoRepository contatoRepository,
-    IUnitOfWork unitOfWork)
+    [FromKeyedServices(nameof(Contatos))] IUnitOfWork unitOfWork)
     : IRequestHandler<AlterarContatoCommand, Result<ContatoResponse, Error>>
 {
     private readonly IContatoRepository _contatoRepository = contatoRepository;

@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Modules.Contatos.Domain\Modules.Contatos.Domain.csproj" />
     <ProjectReference Include="..\..\..\Common\Agenda.Common.Helpers\Agenda.Common.Helpers.csproj" />
+    <ProjectReference Include="..\..\..\Common\Agenda.Common.Shared\Agenda.Common.Shared.csproj" />
   </ItemGroup>
 
 </Project>

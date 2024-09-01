@@ -1,4 +1,4 @@
-using Agenda.Common.Enums;
+using Agenda.Common.Shared.Enums;
 using Agenda.Modules.Contatos.Application.Contracts.Requests;
 using Agenda.Modules.Contatos.Application.Contracts.Responses;
 using Agenda.Modules.Contatos.IntegrationTests.Mock;

@@ -1,4 +1,4 @@
-﻿using Agenda.Common.Enums;
+﻿using Agenda.Common.Shared.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Agenda.WebUI.Models;

@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Agenda.Common\Agenda.Common.csproj" />
+    <ProjectReference Include="..\..\Common\Agenda.Common.Shared\Agenda.Common.Shared.csproj" />
   </ItemGroup>
 
 </Project>

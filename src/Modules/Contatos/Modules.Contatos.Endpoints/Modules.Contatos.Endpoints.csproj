@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Modules.Contatos.Application\Modules.Contatos.Application.csproj" />
     <ProjectReference Include="..\..\..\Common\Agenda.Common.Helpers\Agenda.Common.Helpers.csproj" />
+    <ProjectReference Include="..\..\..\Common\Agenda.Common.Shared\Agenda.Common.Shared.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

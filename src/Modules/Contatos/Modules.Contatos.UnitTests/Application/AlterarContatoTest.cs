@@ -1,4 +1,5 @@
-﻿using Agenda.Common.Enums;
+﻿using Agenda.Common.Shared.Abstractions;
+using Agenda.Common.Shared.Enums;
 using Agenda.Modules.Contatos.Application.Contatos.Commands.AlterarContato;
 using Agenda.Modules.Contatos.Application.Contracts.Requests;
 using Agenda.Modules.Contatos.Domain.Abstractions;

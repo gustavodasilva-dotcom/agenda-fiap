@@ -2,11 +2,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Modules.Contatos.Domain\Modules.Contatos.Domain.csproj" />
-    <ProjectReference Include="..\..\..\Common\Agenda.Common\Agenda.Common.csproj" />
+    <ProjectReference Include="..\..\..\Common\Agenda.Common.Shared\Agenda.Common.Shared.csproj" />
+    <ProjectReference Include="..\Modules.Contatos.IntegrationEvents\Modules.Contatos.IntegrationEvents.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="MassTransit" Version="8.2.5" />
     <PackageReference Include="MediatR" Version="12.4.0" />
   </ItemGroup>
 

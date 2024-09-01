@@ -1,5 +1,5 @@
 using System.Reflection;
-using Agenda.Common.Helpers.Extensions;
+using Agenda.Common.Shared.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

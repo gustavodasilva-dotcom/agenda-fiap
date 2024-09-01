@@ -1,8 +1,10 @@
-﻿using Agenda.Common.Enums;
+﻿using Agenda.Common.Shared.Abstractions;
+using Agenda.Common.Shared.Enums;
+using Agenda.Modules.Contatos.Domain.DomainEvents;
 
 namespace Agenda.Modules.Contatos.Domain.Entities;
 
-public class Contato : IEquatable<Contato>
+public class Contato : BaseEntity
 {
     private Contato(
         string nome,
@@ -25,8 +27,6 @@ public class Contato : IEquatable<Contato>
     {
     }
 
-    public int Id { get; private set; }
-
     public string Nome { get; private set; }
 
     public string Telefone { get; private set; }
@@ -35,23 +35,19 @@ public class Contato : IEquatable<Contato>
 
     public DDDs DDD { get; private set; }
 
-    private IEnumerable<Contato> ObterValoresAtomicos()
-        => [this];
+    public override IEnumerable<object> GetAtomicValues()
+        => [Nome, Telefone, Email, DDD];
 
     public static Contato CriarContato(
         string nome,
         string telefone,
         string email,
         DDDs ddd)
-    {
-        var contato = new Contato(
+        => new(
             nome.Trim(),
             telefone.Trim(),
             email.Trim(),
             ddd);
-
-        return contato;
-    }
 
     public Contato AtualizarContato(
         string nome,
@@ -67,21 +63,6 @@ public class Contato : IEquatable<Contato>
         return this;
     }
 
-    public bool Equals(Contato? other)
-    {
-        return other is not null
-            && Nome.Trim().Equals(other.Nome.Trim())
-            && Telefone.Trim().Equals(other.Telefone.Trim())
-            && Email.Trim().Equals(other.Email.Trim())
-            && DDD.Equals(other.DDD);
-    }
-
-    public override bool Equals(object? obj)
-        => base.Equals(obj);
-
-    public override int GetHashCode()
-        => ObterValoresAtomicos()
-            .Aggregate(
-                default(int),
-                HashCode.Combine);
+    public void RaiseContatoExcluidoDomainEvent()
+        => RaiseDomainEvent(new ContatoExcluidoDomainEvent(Id));
 }

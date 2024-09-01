@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Agenda.Modules.Contatos.Persistence.Configurations;
 
-public class ContatoConfiguration : IEntityTypeConfiguration<Contato>
+public sealed partial class ContatoConfiguration : IEntityTypeConfiguration<Contato>
 {
     public void Configure(EntityTypeBuilder<Contato> builder)
     {
@@ -14,7 +14,7 @@ public class ContatoConfiguration : IEntityTypeConfiguration<Contato>
         builder.HasKey(c => c.Id);
         
         builder.Property(p => p.Id)
-            .HasColumnType(InfrastructureConstants.IntColumnType);
+            .HasColumnType(typeName: InfrastructureConstants.IntColumnType);
         
         builder.Property(p => p.Telefone)
             .HasMaxLength(maxLength: InfrastructureConstants.MaxLength9);

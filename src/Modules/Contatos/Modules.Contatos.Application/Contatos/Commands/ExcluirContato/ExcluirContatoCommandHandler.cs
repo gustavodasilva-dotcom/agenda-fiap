@@ -1,12 +1,14 @@
 using Agenda.Common.Shared;
+using Agenda.Common.Shared.Abstractions;
 using Agenda.Modules.Contatos.Domain.Abstractions;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Agenda.Modules.Contatos.Application.Contatos.Commands.ExcluirContato;
 
 internal sealed class ExcluirContatoCommandHandler(
     IContatoRepository contatoRepository,
-    IUnitOfWork unitOfWork) :
+    [FromKeyedServices(nameof(Contatos))] IUnitOfWork unitOfWork) :
     IRequestHandler<ExcluirContatoCommand, Result<int, Error>>
 {
     private readonly IContatoRepository _contatoRepository = contatoRepository;
@@ -24,6 +26,8 @@ internal sealed class ExcluirContatoCommandHandler(
                 "ExcluirContato.ContatoNaoEncontrado",
                 "Não foi encontrado nenhum contato com o id informado");
         }
+
+        contato.RaiseContatoExcluidoDomainEvent();
 
         _contatoRepository.Excluir(contato);
 

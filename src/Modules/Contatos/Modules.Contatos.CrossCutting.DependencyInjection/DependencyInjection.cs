@@ -1,6 +1,6 @@
 ﻿using Agenda.Common.Helpers.DependencyInstaller;
-using Agenda.Modules.Contatos.CrossCutting.DependencyInjection.AddApplication;
-using Agenda.Modules.Contatos.CrossCutting.DependencyInjection.AddPersistence;
+using Agenda.Modules.Contatos.CrossCutting.DependencyInjection.Application;
+using Agenda.Modules.Contatos.CrossCutting.DependencyInjection.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

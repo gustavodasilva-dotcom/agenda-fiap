@@ -1,4 +1,4 @@
-﻿using Agenda.Common.Enums;
+﻿using Agenda.Common.Shared.Enums;
 using Agenda.Modules.Contatos.Application.Contatos.Queries.ObterContatos;
 using Agenda.Modules.Contatos.Domain.Abstractions;
 using Agenda.Modules.Contatos.Domain.Entities;

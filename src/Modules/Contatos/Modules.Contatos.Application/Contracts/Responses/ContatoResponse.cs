@@ -1,4 +1,4 @@
-﻿using Agenda.Common.Enums;
+﻿using Agenda.Common.Shared.Enums;
 
 namespace Agenda.Modules.Contatos.Application.Contracts.Responses;
 

@@ -1,4 +1,5 @@
-﻿using Agenda.Common.Enums;
+﻿using Agenda.Common.Shared.Enums;
+using Agenda.Common.Shared.Repositories;
 using Agenda.Modules.Contatos.Domain.Abstractions;
 using Agenda.Modules.Contatos.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Agenda.Modules.Contatos.Persistence.Repositories;
 
 public sealed class ContatoRepository(ContatosDbContext dbContext)
-    : BaseRepository<Contato>(dbContext), IContatoRepository
+    : BaseRepository<ContatosDbContext, Contato>(dbContext), IContatoRepository
 {
     private readonly ContatosDbContext _dbContext = dbContext;
 

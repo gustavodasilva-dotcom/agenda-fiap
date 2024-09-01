@@ -16,7 +16,8 @@ public static partial class DependencyInjection
     {
         builder.Services.InstallDependencies(
             builder.Configuration,
-            Modules.Contatos.CrossCutting.DependencyInjection.AssemblyReference.Assembly);
+            Modules.Contatos.CrossCutting.DependencyInjection.AssemblyReference.Assembly,
+            Modules.Eventos.CrossCutting.DependencyInjection.AssemblyReference.Assembly);
 
         builder.Services.InstallEndpoints(
             Modules.Contatos.Endpoints.AssemblyReference.Assembly);
@@ -30,7 +31,7 @@ public static partial class DependencyInjection
         builder.Services.AddMassTransit(busConfigurator =>
         {
             busConfigurator.AddConsumers(
-                Modules.Contatos.CrossCutting.DependencyInjection.AssemblyReference.Assembly);
+                Modules.Eventos.Application.AssemblyReference.Assembly);
 
             busConfigurator.SetKebabCaseEndpointNameFormatter();
 
@@ -55,7 +56,8 @@ public static partial class DependencyInjection
         if (app.Environment.IsDevelopment())
         {
             app.ApplyMigrations(
-                Modules.Contatos.Persistence.AssemblyReference.Assembly);
+                Modules.Contatos.Persistence.AssemblyReference.Assembly,
+                Modules.Eventos.Persistence.AssemblyReference.Assembly);
         }
 
         app.MapEndpoints();
