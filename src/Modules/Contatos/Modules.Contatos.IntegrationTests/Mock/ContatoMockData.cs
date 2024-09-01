@@ -9,18 +9,16 @@ internal sealed partial class ContatoMockData
 {
     public static async Task CreateCategories(
         CustomWebApplicationFactory application,
-        bool criar)
-    {
+        bool criar) {
         using var scope = application.Services.CreateScope();
         var provider = scope.ServiceProvider;
 
         using var contatoDbContext = provider
             .GetRequiredService<ContatosDbContext>();
-        
+
         await contatoDbContext.Database.EnsureCreatedAsync();
 
-        if (criar)
-        {
+        if (criar) {
             await contatoDbContext.Contatos.AddAsync(
                 Contato.CriarContato(
                     "Nome Antigo",
