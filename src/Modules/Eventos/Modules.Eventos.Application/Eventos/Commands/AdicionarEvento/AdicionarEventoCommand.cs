@@ -4,6 +4,6 @@ using MediatR;
 
 namespace Modules.Eventos.Application.Eventos.Commands.AdicionarEvento
 {
-    public sealed record AdicionarEventoCommand(EventoRequest evento): 
+    public sealed record AdicionarEventoCommand(EventoRequest Evento): 
         IRequest<Result<EventoResponse,Error>>;
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Modules.Eventos.Endpoints;
 
 namespace Agenda.Common.DependencyInjection;
 
@@ -21,7 +22,7 @@ public static partial class DependencyInjection
 
         builder.Services.InstallEndpoints(
             Modules.Contatos.Endpoints.AssemblyReference.Assembly,
-            Modules.Eventos.Endpoints.AssemblyReference.Assembly);
+            AssemblyReference.Assembly);
 
         builder.Services.Configure<MessageBrokerOptions>(
             builder.Configuration.GetSection(MessageBrokerOptions.Position));

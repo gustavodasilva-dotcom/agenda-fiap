@@ -19,7 +19,9 @@ public sealed partial class EventoConfiguration : IEntityTypeConfiguration<Event
         builder.Property(p => p.Nome)
             .HasMaxLength(maxLength: InfrastructureConstants.MaxLength255);
 
-        builder.Property(p => p.DataEvento);
+        builder.Property(p => p.DataEventoInicio);
+
+        builder.Property(p => p.DataEventoFinal);
 
         builder.HasMany(p => p.Contatos)
             .WithOne()

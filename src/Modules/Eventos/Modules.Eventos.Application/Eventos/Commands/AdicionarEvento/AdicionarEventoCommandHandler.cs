@@ -14,14 +14,14 @@ namespace Modules.Eventos.Application.Eventos.Commands.AdicionarEvento
     public class AdicionarEventoCommandHandler(
         IEventoRepository eventoRepository,
         [FromKeyedServices(nameof(Eventos))] IUnitOfWork unitOfWork)
-        : IRequestHandler<AlterarEventoCommand, Result<EventoResponse, Error>>
+        : IRequestHandler<AdicionarEventoCommand, Result<EventoResponse, Error>>
     {
 
         private readonly IEventoRepository _eventoRepository = eventoRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public async Task<Result<EventoResponse, Error>> Handle(
-        AlterarEventoCommand request,
+        AdicionarEventoCommand request,
         CancellationToken cancellationToken)
         {
             var resultadoValidacoes = new List<ValidationResult>();
