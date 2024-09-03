@@ -1,4 +1,6 @@
 using System.Reflection;
+using Agenda.Common.Helpers.DependencyInstaller;
+using Agenda.Common.Shared.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,17 +12,19 @@ public static partial class EndpointInstaller
 {
     public static IServiceCollection InstallEndpoints(
         this IServiceCollection services,
-        Assembly assembly)
+        params Assembly[] assemblies)
     {
-        ServiceDescriptor[] serviceDescriptors = assembly
-            .DefinedTypes
-            .Where(type => type is { IsAbstract: false, IsInterface: false } &&
-                           type.IsAssignableTo(typeof(IEndpointInstaller)))
-            .Select(type => ServiceDescriptor.Transient(typeof(IEndpointInstaller), type))
-            .ToArray();
+        foreach (var assembly in assemblies)
+        {
+            ServiceDescriptor[] serviceDescriptors = assembly
+                .DefinedTypes
+                .Where(type => type is { IsAbstract: false, IsInterface: false } &&
+                               type.IsAssignableTo(typeof(IEndpointInstaller)))
+                .Select(type => ServiceDescriptor.Transient(typeof(IEndpointInstaller), type))
+                .ToArray();
 
-        services.TryAddEnumerable(serviceDescriptors);
-
+            services.TryAddEnumerable(serviceDescriptors);
+        }
         return services;
     }
 

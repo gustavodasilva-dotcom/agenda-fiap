@@ -20,7 +20,8 @@ public static partial class DependencyInjection
             Modules.Eventos.CrossCutting.DependencyInjection.AssemblyReference.Assembly);
 
         builder.Services.InstallEndpoints(
-            Modules.Contatos.Endpoints.AssemblyReference.Assembly);
+            Modules.Contatos.Endpoints.AssemblyReference.Assembly,
+            Modules.Eventos.Endpoints.AssemblyReference.Assembly);
 
         builder.Services.Configure<MessageBrokerOptions>(
             builder.Configuration.GetSection(MessageBrokerOptions.Position));

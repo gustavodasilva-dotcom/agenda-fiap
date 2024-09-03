@@ -7,29 +7,41 @@ public class Evento : BaseEntity
 {
     private readonly HashSet<EventoContato> _contatos = [];
 
-    private Evento(string nome, DateTime dataEvento)
+    private Evento(string nome, DateTime dataEventoInicio, DateTime dataEventoFinal)
     {
         Nome = nome;
-        DataEvento = dataEvento;
+        DataEventoInicio = dataEventoInicio;
+        DataEventoFinal = dataEventoFinal;
     }
 
     private Evento()
-        : this(nome: string.Empty, dataEvento: DateTime.MaxValue)
+        : this(nome: string.Empty, dataEventoInicio: DateTime.MinValue, dataEventoFinal: DateTime.MaxValue)
     {
     }
 
     public string Nome { get; private set; }
 
-    public DateTime DataEvento { get; private set; }
+    public DateTime DataEventoInicio { get; private set; }
+
+    public DateTime DataEventoFinal { get; private set; }
 
     public IReadOnlySet<EventoContato> Contatos
         => _contatos;
 
     public override IEnumerable<object> GetAtomicValues()
-        => [Nome, DataEvento];
+        => [Nome, DataEventoInicio, DataEventoFinal];
 
-    public static Evento CriarEvento(string nome)
-        => new(nome.Trim(), DateTime.Now);
+    public static Evento CriarEvento(string nome, DateTime dataEventoInicio, DateTime dataEventoFinal)
+        => new(nome.Trim(), dataEventoInicio, dataEventoFinal);
+
+    public Evento AtualizarEvento(string nome, DateTime dataEventoInicio, DateTime dataEventoFinal)
+    {
+        Nome = nome;
+        DataEventoInicio = dataEventoInicio;
+        DataEventoFinal = dataEventoFinal;
+
+        return this;
+    }
 
     public Result AdicionarContato(int contatoId)
     {

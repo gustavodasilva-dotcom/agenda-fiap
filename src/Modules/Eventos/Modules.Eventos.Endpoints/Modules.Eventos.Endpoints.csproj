@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Agenda.Common.Helpers\Agenda.Common.Helpers.csproj" />
+    <ProjectReference Include="..\..\..\Common\Agenda.Common.Shared\Agenda.Common.Shared.csproj" />
+    <ProjectReference Include="..\Modules.Eventos.Application\Modules.Eventos.Application.csproj" />
+  </ItemGroup>
+
 </Project>
