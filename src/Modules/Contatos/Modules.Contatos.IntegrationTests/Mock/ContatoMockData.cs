@@ -7,8 +7,8 @@ namespace Agenda.Modules.Contatos.IntegrationTests.Mock;
 
 internal sealed partial class ContatoMockData
 {
-    public static async Task CreateCategories(
-        CustomWebApplicationFactory application,
+    public static async Task CreateContatos(
+        ContatosWebApplicationFactory application,
         bool criar) {
         using var scope = application.Services.CreateScope();
         var provider = scope.ServiceProvider;
