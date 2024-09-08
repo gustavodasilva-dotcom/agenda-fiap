@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Modules.Eventos.Persistence.Migrations
 {
     [DbContext(typeof(EventosDbContext))]
-    [Migration("20240901014351_Tabelas_Evento_EventoContato")]
+    [Migration("20240908200115_Tabelas_Evento_EventoContato")]
     partial class Tabelas_Evento_EventoContato
     {
         /// <inheritdoc />
@@ -34,7 +34,10 @@ namespace Modules.Eventos.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DataEvento")
+                    b.Property<DateTime>("DataEventoFinal")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataEventoInicio")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nome")

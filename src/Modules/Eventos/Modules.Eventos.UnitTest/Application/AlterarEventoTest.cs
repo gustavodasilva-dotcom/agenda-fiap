@@ -1,8 +1,8 @@
 ﻿using Agenda.Common.Shared.Abstractions;
+using Agenda.Modules.Eventos.Application.Contracts;
+using Agenda.Modules.Eventos.Application.Eventos.Commands.AlterarEvento;
 using Agenda.Modules.Eventos.Domain.Abstractions;
 using Agenda.Modules.Eventos.Domain.Entities;
-using Modules.Eventos.Application.Contracts;
-using Modules.Eventos.Application.Eventos.Commands.AlterarEvento;
 using Moq;
 using System.Linq.Expressions;
 

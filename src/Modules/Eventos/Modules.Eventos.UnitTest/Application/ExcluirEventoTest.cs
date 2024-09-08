@@ -1,8 +1,7 @@
 ﻿using Agenda.Common.Shared.Abstractions;
-using Agenda.Common.Shared.Enums;
+using Agenda.Modules.Eventos.Application.Eventos.Commands.ExcluirEvento;
 using Agenda.Modules.Eventos.Domain.Abstractions;
 using Agenda.Modules.Eventos.Domain.Entities;
-using Modules.Eventos.Application.Eventos.Commands.ExcluirEvento;
 using Moq;
 using System.Linq.Expressions;
 

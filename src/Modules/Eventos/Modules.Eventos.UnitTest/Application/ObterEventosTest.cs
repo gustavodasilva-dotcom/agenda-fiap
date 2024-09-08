@@ -1,6 +1,6 @@
-﻿using Agenda.Modules.Eventos.Domain.Abstractions;
+﻿using Agenda.Modules.Eventos.Application.Eventos.Queries.ObterEventos;
+using Agenda.Modules.Eventos.Domain.Abstractions;
 using Agenda.Modules.Eventos.Domain.Entities;
-using Modules.Eventos.Application.Eventos.Queries.ObterEventos;
 using Moq;
 
 namespace Agenda.Modules.Eventos.UnitTests.Application;
@@ -12,7 +12,7 @@ public class ObterEventosTest
     [Fact]
     public async Task Validar_handler_obterEventos()
     {
-        var evento = new List<Evento>() 
+        var evento = new List<Evento>()
         {
             Evento.CriarEvento(
                 "nome_evento_unit_test",

@@ -1,10 +1,10 @@
 ﻿using Agenda.Common.Shared.Abstractions;
 using Agenda.Common.Shared;
+using Agenda.Modules.Eventos.Domain.Abstractions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Agenda.Modules.Eventos.Domain.Abstractions;
 
-namespace Modules.Eventos.Application.Eventos.Commands.ExcluirEvento
+namespace Agenda.Modules.Eventos.Application.Eventos.Commands.ExcluirEvento
 {
     public class ExcluirEventoCommandHandler(
         IEventoRepository eventoRepository,

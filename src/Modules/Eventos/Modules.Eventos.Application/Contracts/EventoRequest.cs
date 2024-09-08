@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Modules.Eventos.Application.Contracts
+namespace Agenda.Modules.Eventos.Application.Contracts
 {
     public class EventoRequest
     {
@@ -11,6 +11,6 @@ namespace Modules.Eventos.Application.Contracts
         [Required(ErrorMessage = "Data Evento Inicial é obrigatória")]
         public DateTime DataEventoInicio { get; set; }
         [Required(ErrorMessage = "Data Evento Final é obrigatória")]
-        public DateTime DataEventoFinal {  get; set; }
+        public DateTime DataEventoFinal { get; set; }
     }
 }

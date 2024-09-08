@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\App\App.csproj" />
-    <ProjectReference Include="..\Common\Agenda.Common.DependencyInjection\Agenda.Common.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\..\App\App.csproj" />
+    <ProjectReference Include="..\..\..\Common\Agenda.Common.DependencyInjection\Agenda.Common.DependencyInjection.csproj" />
   </ItemGroup>
 
   <ItemGroup>

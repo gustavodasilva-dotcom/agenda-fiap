@@ -1,10 +1,9 @@
 ﻿using Agenda.Common.Shared.Abstractions;
+using Agenda.Modules.Eventos.Application.Contracts;
+using Agenda.Modules.Eventos.Application.Eventos.Commands.AdicionarEvento;
 using Agenda.Modules.Eventos.Domain.Abstractions;
 using Agenda.Modules.Eventos.Domain.Entities;
 using Moq;
-using Modules.Eventos.Application.Contracts;
-using Modules.Eventos.Application.Eventos.Commands.AdicionarEvento;
-using System.Linq.Expressions;
 
 namespace Agenda.Modules.Eventos.UnitTests.Application;
 
@@ -16,14 +15,13 @@ public class AdicionarEventoTest
     [Fact]
     public async Task Validar_handler_adicionar_evento()
     {
-        EventoRequest evento =
-            new()
-            {
-                Nome = "nome_evento_unit_test",
-                DataEventoInicio = DateTime.Now.AddDays(1),
-                DataEventoFinal = DateTime.Now.AddDays(2),
-                IdContato = 9
-            };
+        EventoRequest evento = new()
+        {
+            Nome = "nome_evento_unit_test",
+            DataEventoInicio = DateTime.Now.AddDays(1),
+            DataEventoFinal = DateTime.Now.AddDays(2),
+            IdContato = 9
+        };
 
         var handler = new AdicionarEventoCommandHandler(
             eventoRepository: _mockEventoRepository.Object,
@@ -49,14 +47,13 @@ public class AdicionarEventoTest
                 It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
             .Returns(eventoEntidade);
 
-        EventoRequest Eventos =
-            new()
-            {
-                Nome = "nome_evento_unit_test_2",
-                DataEventoInicio = DateTime.Now.AddDays(1),
-                DataEventoFinal = DateTime.Now.AddDays(2),
-                IdContato =9
-            };
+        EventoRequest Eventos = new()
+        {
+            Nome = "nome_evento_unit_test_2",
+            DataEventoInicio = DateTime.Now.AddDays(1),
+            DataEventoFinal = DateTime.Now.AddDays(2),
+            IdContato = 9
+        };
 
         var handler = new AdicionarEventoCommandHandler(
             eventoRepository: _mockEventoRepository.Object,

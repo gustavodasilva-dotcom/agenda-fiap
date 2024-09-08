@@ -1,15 +1,14 @@
 ﻿using Agenda.Common.Shared.Abstractions;
 using Agenda.Common.Shared;
+using Agenda.Modules.Eventos.Application.Contracts;
 using Agenda.Modules.Eventos.Domain.Abstractions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Modules.Eventos.Application.Contracts;
-using Modules.Eventos.Application.Eventos.Commands.AlterarEvento;
 using Agenda.Modules.Eventos.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 using Mapster;
 
-namespace Modules.Eventos.Application.Eventos.Commands.AdicionarEvento
+namespace Agenda.Modules.Eventos.Application.Eventos.Commands.AdicionarEvento
 {
     public class AdicionarEventoCommandHandler(
         IEventoRepository eventoRepository,
@@ -21,8 +20,8 @@ namespace Modules.Eventos.Application.Eventos.Commands.AdicionarEvento
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public async Task<Result<EventoResponse, Error>> Handle(
-        AdicionarEventoCommand request,
-        CancellationToken cancellationToken)
+            AdicionarEventoCommand request,
+            CancellationToken cancellationToken)
         {
             var resultadoValidacoes = new List<ValidationResult>();
 

@@ -1,19 +1,19 @@
 ﻿using Agenda.Common.Shared.Abstractions;
 using Agenda.Common.Shared;
+using Agenda.Modules.Eventos.Application.Contracts;
+using Agenda.Modules.Eventos.Domain.Abstractions;
+using Agenda.Modules.Eventos.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel.DataAnnotations;
-using Agenda.Modules.Eventos.Domain.Abstractions;
-using Modules.Eventos.Application.Contracts;
-using Agenda.Modules.Eventos.Domain.Entities;
 using Mapster;
 
-namespace Modules.Eventos.Application.Eventos.Commands.AlterarEvento
+namespace Agenda.Modules.Eventos.Application.Eventos.Commands.AlterarEvento
 {
     public class AlterarEventoCommandHandler(
-    IEventoRepository eventoRepository,
-    [FromKeyedServices(nameof(Eventos))] IUnitOfWork unitOfWork)
-    : IRequestHandler<AlterarEventoCommand, Result<EventoResponse, Error>>
+        IEventoRepository eventoRepository,
+        [FromKeyedServices(nameof(Eventos))] IUnitOfWork unitOfWork)
+        : IRequestHandler<AlterarEventoCommand, Result<EventoResponse, Error>>
     {
         private readonly IEventoRepository _eventoRepository = eventoRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
@@ -36,7 +36,7 @@ namespace Modules.Eventos.Application.Eventos.Commands.AlterarEvento
 
             EventoRequest eventoRequest = request.Evento;
             Evento eventoExistente = _eventoRepository
-                .ObterEventoPorPeriodoEContato(eventoRequest.IdContato, eventoRequest.DataEventoInicio, eventoRequest.DataEventoFinal );
+                .ObterEventoPorPeriodoEContato(eventoRequest.IdContato, eventoRequest.DataEventoInicio, eventoRequest.DataEventoFinal);
 
             if (eventoExistente is not null
                 && eventoExistente.Contatos.Any(x => x.Id != eventoRequest.IdContato))

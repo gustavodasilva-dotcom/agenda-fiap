@@ -1,13 +1,12 @@
 ﻿using Agenda.Common.Helpers.EndpointInstaller;
-using Agenda.Modules.Eventos.Endpoints;
+using Agenda.Modules.Eventos.Application.Eventos.Commands.ExcluirEvento;
+using Agenda.Modules.Eventos.Endpoints.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Modules.Eventos.Application.Eventos.Commands.ExcluirEvento;
-using Modules.Eventos.Endpoints.Constants;
 
-namespace Modules.Eventos.Endpoints.Eventos
+namespace Agenda.Modules.Eventos.Endpoints.Eventos
 {
     public class ExcluirEvento : IEndpointInstaller
     {

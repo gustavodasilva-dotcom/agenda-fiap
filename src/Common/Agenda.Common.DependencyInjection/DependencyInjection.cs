@@ -55,7 +55,7 @@ public static partial class DependencyInjection
 
     public static void UseApp(this WebApplication app)
     {
-        if (!app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment())
         {
             app.ApplyMigrations(
                 Modules.Contatos.Persistence.AssemblyReference.Assembly,

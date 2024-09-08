@@ -1,7 +1,7 @@
-﻿using Modules.Eventos.Application.Contracts;
+﻿using Agenda.Modules.Eventos.Application.Contracts;
 using System.ComponentModel.DataAnnotations;
 
-namespace Modules.Eventos.UnitTest.Contracts
+namespace Agenda.Modules.Eventos.UnitTest.Contracts
 {
     public class EventoRequestTest
     {

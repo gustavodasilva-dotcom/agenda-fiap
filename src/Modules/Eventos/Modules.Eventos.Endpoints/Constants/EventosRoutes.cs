@@ -1,4 +1,4 @@
-﻿namespace Modules.Eventos.Endpoints.Constants
+﻿namespace Agenda.Modules.Eventos.Endpoints.Constants
 {
     internal static partial class EventosRoutes
     {

@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Modules.Eventos.Application.Contracts;
+using Agenda.Modules.Eventos.Application.Contracts;
 
-namespace Modules.Eventos.Application.Eventos.Queries.ObterEventos
+namespace Agenda.Modules.Eventos.Application.Eventos.Queries.ObterEventos
 {
     public sealed record ObterEventosQuery() : IRequest<IEnumerable<EventoResponse>>;
 }

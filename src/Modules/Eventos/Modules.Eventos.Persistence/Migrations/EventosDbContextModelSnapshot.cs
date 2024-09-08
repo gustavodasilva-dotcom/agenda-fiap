@@ -31,7 +31,10 @@ namespace Modules.Eventos.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DataEvento")
+                    b.Property<DateTime>("DataEventoFinal")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataEventoInicio")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nome")

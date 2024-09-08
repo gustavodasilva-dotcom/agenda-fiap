@@ -1,4 +1,4 @@
-﻿namespace Modules.Eventos.Application.Contracts
+﻿namespace Agenda.Modules.Eventos.Application.Contracts
 {
     public class EventoResponse
     {

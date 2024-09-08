@@ -2,12 +2,11 @@
 using Agenda.Modules.Eventos.Domain.Entities;
 using Mapster;
 using MediatR;
-using Modules.Eventos.Application.Contracts;
+using Agenda.Modules.Eventos.Application.Contracts;
 
-namespace Modules.Eventos.Application.Eventos.Queries.ObterEventos
+namespace Agenda.Modules.Eventos.Application.Eventos.Queries.ObterEventos
 {
-    public class ObterEventosQueryHandler
-    : IRequestHandler<ObterEventosQuery, IEnumerable<EventoResponse>>
+    public class ObterEventosQueryHandler : IRequestHandler<ObterEventosQuery, IEnumerable<EventoResponse>>
     {
         private readonly IEventoRepository _eventoRepository;
 

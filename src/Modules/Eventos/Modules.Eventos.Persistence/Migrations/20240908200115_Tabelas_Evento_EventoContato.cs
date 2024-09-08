@@ -22,7 +22,8 @@ namespace Modules.Eventos.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    DataEvento = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DataEventoInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataEventoFinal = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

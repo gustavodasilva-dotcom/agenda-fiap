@@ -14,8 +14,6 @@ public class EventoContato : BaseEntity
     {
     }
 
-    public int Id { get; private set; }
-
     public int EventoId { get; private set; }
 
     public int ContatoId { get; private set; }

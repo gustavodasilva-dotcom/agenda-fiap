@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Modules\Eventos\Modules.Eventos.Application\Modules.Eventos.Application.csproj" />
+    <ProjectReference Include="..\Modules.Eventos.Application\Modules.Eventos.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
