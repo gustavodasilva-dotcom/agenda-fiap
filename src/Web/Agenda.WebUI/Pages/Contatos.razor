@@ -1,0 +1,190 @@
+﻿@page "/contatos"
+
+@using Agenda.Common.Shared.Enums
+@using Agenda.Common.Shared.Extensions
+@using Agenda.WebUI.Models
+@using Agenda.WebUI.Services
+@using System.ComponentModel.DataAnnotations
+@using System.Reflection
+
+@inject NavigationManager NavigationManager
+@inject ContatosService ContatosService
+
+<PageTitle>Contatos</PageTitle>
+
+<h1>Contatos</h1>
+
+<div class="form-group mb-5">
+    <label for="enumSelect">DDD:</label>
+
+    <div class="row">
+        <div class="col-11">
+            <select id="enumSelect" class="form-control" @bind="DddSelecionado">
+                @foreach (DDDs enumValue in Enum.GetValues(typeof(DDDs)))
+                {
+                    <option value="@enumValue">
+                        @enumValue.GetEnumDisplayName()
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="col-1">
+            <button class="btn btn-primary" @onclick=CarregarContatosDddAsync>Carregar</button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="form-group">
+    <div class="mb-3">
+        <a class="btn btn-primary" @onclick="ShowModalAdicionar">Novo Contato</a>
+    </div>
+</div>
+
+<div class="form-group">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Email</th>
+                <th>DDD</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ContatoModel contato in contatosList)
+            {
+                <tr>
+                    <td>@contato.Nome</td>
+                    <td>@contato.Telefone</td>
+                    <td>@contato.Email</td>
+                    <td>@contato.DDD?.GetEnumDisplayName()</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => ShowModalEditar(contato)">Editar</button>
+                        <button class="btn btn-danger" @onclick="() => ShowModalExclusao(contato)">Excluir</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<ContatoFormModal @ref="novoContatoModal" OnSubmit="AdicionarContato" Title="Adicionar Novo Contato">
+</ContatoFormModal>
+
+<ContatoFormModal @ref="editarContatoModal" Contato="contatoSelecionadoEdicao" OnSubmit="AtualizarContato" Title="Editar Contato">
+</ContatoFormModal>
+
+<ConfirmacaoModal @ref="exclusaoModal" OnConfirmation="ExcluirContato" Title="Excluir contato" Message="Deseja mesmo excluir esse registro?">
+
+</ConfirmacaoModal>
+
+<ErrorModal @ref="erroModal" Title="Ocorreu um erro ao realizar essa operação" Message="@errorMessage">
+
+</ErrorModal>
+
+@code {
+
+    [Parameter]
+    public int? Ddd { get; set; }
+
+    private DDDs DddSelecionado { get; set; } = DDDs.SP;
+    private List<ContatoModel> contatosList = new List<ContatoModel>();
+
+    //Selecionados
+    private ContatoModel contatoSelecionadoEdicao = new ContatoModel();
+    private ContatoModel contatoSelecionadoExclusao = new ContatoModel();
+
+    //Modais
+    private ContatoFormModal novoContatoModal;
+    private ContatoFormModal editarContatoModal;
+    private ConfirmacaoModal exclusaoModal;
+    private ErrorModal erroModal;
+    private string errorMessage;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarContatosDddAsync();
+    }
+
+    private async Task AdicionarContato()
+    {
+        var response = await ContatosService.AdicionarContatoAsync([novoContatoModal.Contato]);
+
+        if (response.Success)
+        {
+            await CarregarContatosDddAsync();
+            novoContatoModal.Hide();
+            StateHasChanged();
+        }
+        else
+        {
+            ShowModalErro(response.Message);
+        }
+    }
+
+    private async Task AtualizarContato()
+    {
+        var response = await ContatosService.AlterarContatoAsync(editarContatoModal.Contato);
+
+        if (response.Success)
+        {
+            await CarregarContatosDddAsync();
+            editarContatoModal.Hide();
+            StateHasChanged();
+        }
+        else
+        {
+            ShowModalErro(response.Message);
+        }
+    }
+
+    private async Task ExcluirContato()
+    {
+        var response = await ContatosService.ExcluirContatoAsync(contatoSelecionadoExclusao.Id);
+
+        if (response.Success)
+        {
+            await CarregarContatosDddAsync();
+            exclusaoModal.Hide();
+            StateHasChanged();
+        }
+        else
+        {
+            ShowModalErro(response.Message);
+        }
+    }
+
+    private void ShowModalAdicionar()
+    {
+        novoContatoModal.Show();
+    }
+
+    private void ShowModalEditar(ContatoModel contato)
+    {
+        contatoSelecionadoEdicao = contato;
+        editarContatoModal.Show();
+    }
+
+    private void ShowModalExclusao(ContatoModel contato)
+    {
+        contatoSelecionadoExclusao = contato;
+        exclusaoModal.Show();
+    }
+
+    private void ShowModalErro(string message)
+    {
+        errorMessage = message;
+        erroModal.Show();
+    }
+
+    private async Task CarregarContatosDddAsync()
+    {
+        contatosList = await ContatosService.GetContatosAsync((int?)DddSelecionado);
+    }
+}

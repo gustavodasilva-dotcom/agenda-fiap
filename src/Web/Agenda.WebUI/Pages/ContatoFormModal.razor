@@ -1,0 +1,92 @@
+﻿@using Agenda.WebUI.Models
+@using Agenda.Common.Shared.Enums
+@using Agenda.Common.Shared.Extensions
+@using System.ComponentModel.DataAnnotations
+@using System.Reflection
+@using WebUI.Services
+
+@inject NavigationManager NavigationManager
+@inject ContatosService ContatosService
+
+@if (isVisible)
+{
+    <div class="modal show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@Title</h5>
+                    <button type="button" class="close" aria-label="Close" @onclick="Hide">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <EditForm Model="@Contato" OnValidSubmit="@OnSubmit">
+                        <DataAnnotationsValidator />
+
+                        <div class="form-group">
+                            <label for="nome">Nome:</label>
+                            <input type="text" class="form-control" id="nome" @bind="Contato.Nome">
+                            <ValidationMessage For="@(() => Contato.Nome)" />
+                        </div>
+                        <div class="form-group">
+                            <label for="enumSelect">DDD:</label>
+                            <select id="enumSelect" class="form-control" @bind="Contato.DDD">
+                                @foreach (DDDs enumValue in Enum.GetValues(typeof(DDDs)))
+                                {
+                                    <option value="@enumValue">
+                                        @enumValue.GetEnumDisplayName()
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefone">Telefone:</label>
+                            <input type="text" class="form-control" id="telefone" @bind="Contato.Telefone">
+                            <ValidationMessage For="@(() => Contato.Telefone)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" @bind="Contato.Email">
+                            <ValidationMessage For="@(() => Contato.Email)" />
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary mt-3">Salvar</button>
+                        </div>
+                    </EditForm>
+
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isVisible;
+
+    [Parameter]
+    public ContatoModel Contato { get; set; } = new ContatoModel();
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+
+    public void Show()
+    {
+        isVisible = true;
+        StateHasChanged();
+    }
+
+    public void Hide()
+    {
+        Contato = new ContatoModel();
+        isVisible = false;
+        StateHasChanged();
+    }
+}
