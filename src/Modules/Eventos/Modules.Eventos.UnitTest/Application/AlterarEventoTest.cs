@@ -29,13 +29,13 @@ public class AlterarEventoTest
             Nome = "nome_evento_unit_test_2",
             DataEventoInicio = DateTime.Now.AddDays(1),
             DataEventoFinal = DateTime.Now.AddDays(2),
-            IdContato = 9
+            ContatosIds = [9]
         };
 
         {
             var handler = new AlterarEventoCommandHandler(
-            eventoRepository: _mockEventoRepository.Object,
-            unitOfWork: _mockUnitOfWork.Object);
+                eventoRepository: _mockEventoRepository.Object,
+                unitOfWork: _mockUnitOfWork.Object);
 
             var resultado = await handler.Handle(new AlterarEventoCommand(1, evento), default);
 
@@ -55,7 +55,11 @@ public class AlterarEventoTest
         eventoEntidade.AdicionarContato(9);
 
         _mockEventoRepository.Setup(s => s.ObterEventoPorPeriodoEContato(
-                It.IsAny<int>(),It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+                It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+            .Returns(eventoEntidade);
+
+        _mockEventoRepository.Setup(s => s.Obter(
+                It.IsAny<Expression<Func<Evento, bool>>>()))
             .Returns(eventoEntidade);
 
         var eventos = new EventoRequest()
@@ -63,13 +67,13 @@ public class AlterarEventoTest
             Nome = "nome_evento_unit_test_2",
             DataEventoInicio = DateTime.Now,
             DataEventoFinal = DateTime.Now.AddDays(1),
-            IdContato = 9
+            ContatosIds = [9]
         };
 
         {
             var handler = new AlterarEventoCommandHandler(
-            eventoRepository: _mockEventoRepository.Object,
-            unitOfWork: _mockUnitOfWork.Object);
+                eventoRepository: _mockEventoRepository.Object,
+                unitOfWork: _mockUnitOfWork.Object);
 
             var resultado = await handler.Handle(new AlterarEventoCommand(2, eventos), default);
 
@@ -86,13 +90,13 @@ public class AlterarEventoTest
             Nome = "nome_evento_unit_test_2",
             DataEventoInicio = DateTime.Now.AddDays(1),
             DataEventoFinal = DateTime.Now.AddDays(2),
-            IdContato = 9
+            ContatosIds = [9]
         };
 
         {
             var handler = new AlterarEventoCommandHandler(
-            eventoRepository: _mockEventoRepository.Object,
-            unitOfWork: _mockUnitOfWork.Object);
+                eventoRepository: _mockEventoRepository.Object,
+                unitOfWork: _mockUnitOfWork.Object);
 
             var resultado = await handler.Handle(new AlterarEventoCommand(1, evento), default);
 

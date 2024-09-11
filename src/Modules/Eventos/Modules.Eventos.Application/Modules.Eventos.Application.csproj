@@ -17,4 +17,10 @@
     <ProjectReference Include="..\Modules.Eventos.Domain\Modules.Eventos.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>Modules.Eventos.UnitTest</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
 </Project>

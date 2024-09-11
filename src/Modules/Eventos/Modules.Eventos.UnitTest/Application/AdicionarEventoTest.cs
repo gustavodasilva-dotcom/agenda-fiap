@@ -20,7 +20,7 @@ public class AdicionarEventoTest
             Nome = "nome_evento_unit_test",
             DataEventoInicio = DateTime.Now.AddDays(1),
             DataEventoFinal = DateTime.Now.AddDays(2),
-            IdContato = 9
+            ContatosIds = [9]
         };
 
         var handler = new AdicionarEventoCommandHandler(
@@ -52,7 +52,7 @@ public class AdicionarEventoTest
             Nome = "nome_evento_unit_test_2",
             DataEventoInicio = DateTime.Now.AddDays(1),
             DataEventoFinal = DateTime.Now.AddDays(2),
-            IdContato = 9
+            ContatosIds = [9]
         };
 
         var handler = new AdicionarEventoCommandHandler(

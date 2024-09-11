@@ -10,7 +10,7 @@ namespace Agenda.Modules.Eventos.UnitTest.Contracts
             Nome = "nome_evento_unit_test",
             DataEventoFinal = DateTime.Now.AddDays(1),
             DataEventoInicio = DateTime.Now,
-            IdContato = 3
+            ContatosIds = [3]
         };
 
         [Fact]

@@ -43,19 +43,13 @@ public class Evento : BaseEntity
         return this;
     }
 
-    public Result AdicionarContato(int contatoId)
+    public void AdicionarContato(int contatoId)
     {
         var contato = _contatos.SingleOrDefault(c => c.ContatoId == contatoId);
-        if (contato is not null)
+        if (contato is null)
         {
-            return new Error(
-                "AdicionarContato.ContatoRepetido",
-                "Contato já existente na lista do evento");
+            _contatos.Add(EventoContato.CriarContato(Id, contatoId));
         }
-
-        _contatos.Add(EventoContato.CriarContato(Id, contatoId));
-
-        return Result.Success();
     }
 
     public void RemoverContato(int contatoId)

@@ -3,7 +3,11 @@
     public class EventoResponse
     {
         public int Id { get; set; }
+
         public string Nome { get; set; } = string.Empty;
-        public DateTime DataHora { get; set; }
+
+        public DateTime DataEventoInicio { get; set; }
+
+        public DateTime DataEventoFinal { get; set; }
     }
 }

@@ -8,27 +8,26 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace Agenda.Modules.Eventos.Endpoints.Eventos
+namespace Agenda.Modules.Eventos.Endpoints.Eventos;
+
+public class AdicionarEvento : IEndpointInstaller
 {
-    public class AdicionarEvento : IEndpointInstaller
+    public void InstallEndpoint(IEndpointRouteBuilder app)
     {
-        public void InstallEndpoint(IEndpointRouteBuilder app)
+        app.MapPost(EventosRoutes.AdicionarEventos, async (
+            [FromBody] EventoRequest evento,
+            ISender sender) =>
         {
-            app.MapPost(EventosRoutes.AdicionarEventos, async (
-                [FromBody] EventoRequest evento,
-                ISender sender) =>
+            var command = new AdicionarEventoCommand(evento);
+
+            var result = await sender.Send(command);
+            if (result.IsFailure)
             {
-                var command = new AdicionarEventoCommand(evento);
+                return Results.BadRequest(result.Error);
+            }
 
-                var result = await sender.Send(command);
-                if (result.IsFailure)
-                {
-                    return Results.BadRequest(result.Error);
-                }
-
-                return Results.Created($"eventos", result.Value);
-            })
-            .WithTags(Tags.Eventos);
-        }
+            return Results.Created($"eventos", result.Value);
+        })
+        .WithTags(Tags.Eventos);
     }
 }

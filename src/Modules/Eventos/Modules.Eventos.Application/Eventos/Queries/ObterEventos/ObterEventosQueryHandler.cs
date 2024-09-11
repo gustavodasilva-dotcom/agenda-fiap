@@ -1,29 +1,24 @@
-﻿using Agenda.Modules.Eventos.Domain.Abstractions;
+﻿using Agenda.Modules.Eventos.Application.Contracts;
+using Agenda.Modules.Eventos.Domain.Abstractions;
 using Agenda.Modules.Eventos.Domain.Entities;
 using Mapster;
 using MediatR;
-using Agenda.Modules.Eventos.Application.Contracts;
 
-namespace Agenda.Modules.Eventos.Application.Eventos.Queries.ObterEventos
+namespace Agenda.Modules.Eventos.Application.Eventos.Queries.ObterEventos;
+
+internal sealed class ObterEventosQueryHandler(IEventoRepository eventoRepository)
+    : IRequestHandler<ObterEventosQuery, IEnumerable<EventoResponse>>
 {
-    public class ObterEventosQueryHandler : IRequestHandler<ObterEventosQuery, IEnumerable<EventoResponse>>
+    private readonly IEventoRepository _eventoRepository = eventoRepository;
+
+    public Task<IEnumerable<EventoResponse>> Handle(
+        ObterEventosQuery request,
+        CancellationToken cancellationToken)
     {
-        private readonly IEventoRepository _eventoRepository;
+        IEnumerable<Evento> eventos = _eventoRepository.ObterTodos();
 
-        public ObterEventosQueryHandler(IEventoRepository eventoRepository)
-        {
-            _eventoRepository = eventoRepository;
-        }
+        var response = eventos.Adapt<IEnumerable<EventoResponse>>();
 
-        public Task<IEnumerable<EventoResponse>> Handle(
-            ObterEventosQuery request,
-            CancellationToken cancellationToken)
-        {
-            IEnumerable<Evento> eventos = _eventoRepository.ObterTodos();
-
-            var response = eventos.Adapt<IEnumerable<EventoResponse>>();
-
-            return Task.FromResult(response);
-        }
+        return Task.FromResult(response);
     }
 }
