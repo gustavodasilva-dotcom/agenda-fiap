@@ -3,12 +3,14 @@ using Agenda.Modules.Eventos.Application.Contracts;
 using Agenda.Modules.Eventos.Application.Eventos.Commands.AdicionarEvento;
 using Agenda.Modules.Eventos.Domain.Abstractions;
 using Agenda.Modules.Eventos.Domain.Entities;
+using Agenda.Modules.Eventos.UnitTests.Configurations;
 using Moq;
 
 namespace Agenda.Modules.Eventos.UnitTests.Application;
 
-public class AdicionarEventoTest
+public class AdicionarEventoTest(EventoTestFixture fixture) : EventoTestFixture
 {
+    private readonly EventoTestFixture _fixture = fixture;
     private readonly Mock<IEventoRepository> _mockEventoRepository = new();
     private readonly Mock<IUnitOfWork> _mockUnitOfWork = new();
 
@@ -24,8 +26,9 @@ public class AdicionarEventoTest
         };
 
         var handler = new AdicionarEventoCommandHandler(
-            eventoRepository: _mockEventoRepository.Object,
-            unitOfWork: _mockUnitOfWork.Object);
+            _fixture.MockMapper,
+            _mockEventoRepository.Object,
+            _mockUnitOfWork.Object);
 
         var resultado = await handler.Handle(new AdicionarEventoCommand(evento), default);
 
@@ -56,8 +59,9 @@ public class AdicionarEventoTest
         };
 
         var handler = new AdicionarEventoCommandHandler(
-            eventoRepository: _mockEventoRepository.Object,
-            unitOfWork: _mockUnitOfWork.Object);
+            _fixture.MockMapper,
+            _mockEventoRepository.Object,
+            _mockUnitOfWork.Object);
 
         var resultado = await handler.Handle(new AdicionarEventoCommand(Eventos), default);
 

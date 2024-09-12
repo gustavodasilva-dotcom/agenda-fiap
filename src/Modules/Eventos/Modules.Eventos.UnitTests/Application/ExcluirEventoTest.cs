@@ -25,8 +25,8 @@ public class ExcluirEventoTest
 
         {
             var handler = new ExcluirEventoCommandHandler(
-            eventoRepository: _mockEventoRepository.Object,
-            unitOfWork: _mockUnitOfWork.Object);
+                _mockEventoRepository.Object,
+                _mockUnitOfWork.Object);
 
             var resultado = await handler.Handle(new ExcluirEventoCommand(0), default);
 
@@ -39,8 +39,8 @@ public class ExcluirEventoTest
     {
         {
             var handler = new ExcluirEventoCommandHandler(
-            eventoRepository: _mockEventoRepository.Object,
-            unitOfWork: _mockUnitOfWork.Object);
+                _mockEventoRepository.Object,
+                _mockUnitOfWork.Object);
 
             var resultado = await handler.Handle(new ExcluirEventoCommand(0), default);
 

@@ -1,14 +1,15 @@
 ﻿using Agenda.Modules.Eventos.Application.Contracts;
 using Agenda.Modules.Eventos.Domain.Abstractions;
 using Agenda.Modules.Eventos.Domain.Entities;
-using Mapster;
+using AutoMapper;
 using MediatR;
 
 namespace Agenda.Modules.Eventos.Application.Eventos.Queries.ObterEventos;
 
-internal sealed class ObterEventosQueryHandler(IEventoRepository eventoRepository)
+internal sealed class ObterEventosQueryHandler(IMapper mapper, IEventoRepository eventoRepository)
     : IRequestHandler<ObterEventosQuery, IEnumerable<EventoResponse>>
 {
+    private readonly IMapper _mapper = mapper;
     private readonly IEventoRepository _eventoRepository = eventoRepository;
 
     public Task<IEnumerable<EventoResponse>> Handle(
@@ -17,7 +18,7 @@ internal sealed class ObterEventosQueryHandler(IEventoRepository eventoRepositor
     {
         IEnumerable<Evento> eventos = _eventoRepository.ObterTodos();
 
-        var response = eventos.Adapt<IEnumerable<EventoResponse>>();
+        var response = _mapper.Map<IEnumerable<EventoResponse>>(eventos);
 
         return Task.FromResult(response);
     }

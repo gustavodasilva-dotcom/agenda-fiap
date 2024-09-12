@@ -9,5 +9,7 @@
         public DateTime DataEventoInicio { get; set; }
 
         public DateTime DataEventoFinal { get; set; }
+
+        public int[] ContatosIds { get; set; } = [];
     }
 }

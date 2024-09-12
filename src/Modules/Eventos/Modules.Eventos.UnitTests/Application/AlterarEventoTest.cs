@@ -3,13 +3,15 @@ using Agenda.Modules.Eventos.Application.Contracts;
 using Agenda.Modules.Eventos.Application.Eventos.Commands.AlterarEvento;
 using Agenda.Modules.Eventos.Domain.Abstractions;
 using Agenda.Modules.Eventos.Domain.Entities;
+using Agenda.Modules.Eventos.UnitTests.Configurations;
 using Moq;
 using System.Linq.Expressions;
 
 namespace Agenda.Modules.Eventos.UnitTests.Application;
 
-public class AlterarEventoTest
+public class AlterarEventoTest(EventoTestFixture fixture) : EventoTestFixture
 {
+    private readonly EventoTestFixture _fixture = fixture;
     private readonly Mock<IEventoRepository> _mockEventoRepository = new();
     private readonly Mock<IUnitOfWork> _mockUnitOfWork = new();
 
@@ -34,8 +36,9 @@ public class AlterarEventoTest
 
         {
             var handler = new AlterarEventoCommandHandler(
-                eventoRepository: _mockEventoRepository.Object,
-                unitOfWork: _mockUnitOfWork.Object);
+                _fixture.MockMapper,
+                _mockEventoRepository.Object,
+                _mockUnitOfWork.Object);
 
             var resultado = await handler.Handle(new AlterarEventoCommand(1, evento), default);
 
@@ -72,8 +75,9 @@ public class AlterarEventoTest
 
         {
             var handler = new AlterarEventoCommandHandler(
-                eventoRepository: _mockEventoRepository.Object,
-                unitOfWork: _mockUnitOfWork.Object);
+                _fixture.MockMapper,
+                _mockEventoRepository.Object,
+                _mockUnitOfWork.Object);
 
             var resultado = await handler.Handle(new AlterarEventoCommand(2, eventos), default);
 
@@ -95,8 +99,9 @@ public class AlterarEventoTest
 
         {
             var handler = new AlterarEventoCommandHandler(
-                eventoRepository: _mockEventoRepository.Object,
-                unitOfWork: _mockUnitOfWork.Object);
+                _fixture.MockMapper,
+                _mockEventoRepository.Object,
+                _mockUnitOfWork.Object);
 
             var resultado = await handler.Handle(new AlterarEventoCommand(1, evento), default);
 

@@ -15,6 +15,9 @@ public sealed class EventoRepository(EventosDbContext dbContext)
         => _dbContext.Eventos.Include(e => e.Contatos)
             .SingleOrDefault(filtro);
 
+    public override List<Evento> ObterTodos()
+        => [.. _dbContext.Eventos.Include(e => e.Contatos)];
+
     public Evento? ObterEventoPorPeriodoEContato(int contatoId, DateTime dataInicio, DateTime dataFinal)
         => _dbContext.Eventos.Include(e => e.Contatos)
             .FirstOrDefault(e =>

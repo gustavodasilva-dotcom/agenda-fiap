@@ -1,12 +1,14 @@
 ﻿using Agenda.Modules.Eventos.Application.Eventos.Queries.ObterEventos;
 using Agenda.Modules.Eventos.Domain.Abstractions;
 using Agenda.Modules.Eventos.Domain.Entities;
+using Agenda.Modules.Eventos.UnitTests.Configurations;
 using Moq;
 
 namespace Agenda.Modules.Eventos.UnitTests.Application;
 
-public class ObterEventosTest
+public class ObterEventosTest(EventoTestFixture fixture) : EventoTestFixture
 {
+    private readonly EventoTestFixture _fixture = fixture;
     private readonly Mock<IEventoRepository> _mockEventoRepository = new();
 
     [Fact]
@@ -27,7 +29,9 @@ public class ObterEventosTest
 
         _mockEventoRepository.Setup(x => x.ObterTodos()).Returns(evento);
 
-        var handler = new ObterEventosQueryHandler(_mockEventoRepository.Object);
+        var handler = new ObterEventosQueryHandler(
+            _fixture.MockMapper,
+            _mockEventoRepository.Object);
 
         var resultado = await handler.Handle(new ObterEventosQuery(), default);
 

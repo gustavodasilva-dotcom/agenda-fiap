@@ -3,7 +3,7 @@ using Agenda.Common.Shared;
 using Agenda.Modules.Eventos.Application.Contracts;
 using Agenda.Modules.Eventos.Domain.Abstractions;
 using Agenda.Modules.Eventos.Domain.Entities;
-using Mapster;
+using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel.DataAnnotations;
@@ -11,10 +11,12 @@ using System.ComponentModel.DataAnnotations;
 namespace Agenda.Modules.Eventos.Application.Eventos.Commands.AlterarEvento;
 
 internal sealed class AlterarEventoCommandHandler(
+    IMapper mapper,
     IEventoRepository eventoRepository,
     [FromKeyedServices(nameof(Eventos))] IUnitOfWork unitOfWork)
     : IRequestHandler<AlterarEventoCommand, Result<EventoResponse, Error>>
 {
+    private readonly IMapper _mapper = mapper;
     private readonly IEventoRepository _eventoRepository = eventoRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
@@ -76,8 +78,6 @@ internal sealed class AlterarEventoCommandHandler(
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var response = eventoAtualizar.Adapt<EventoResponse>();
-
-        return response;
+        return _mapper.Map<EventoResponse>(eventoAtualizar);
     }
 }
