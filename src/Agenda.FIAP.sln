@@ -49,9 +49,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agenda.WebUI", "Web\Agenda.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.Contatos.IntegrationEvents", "Modules\Contatos\Modules.Contatos.IntegrationEvents\Modules.Contatos.IntegrationEvents.csproj", "{B96DBF06-9C0A-4EE3-85D0-7943DE8B213D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Eventos.UnitTest", "Modules\Eventos\Modules.Eventos.UnitTest\Modules.Eventos.UnitTest.csproj", "{170BC4FD-D2B7-4160-A7D9-26E09E671051}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.Eventos.UnitTest", "Modules\Eventos\Modules.Eventos.UnitTest\Modules.Eventos.UnitTest.csproj", "{170BC4FD-D2B7-4160-A7D9-26E09E671051}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Eventos.IntegrationTests", "Modules\Eventos\Modules.Eventos.IntegrationTests\Modules.Eventos.IntegrationTests.csproj", "{CA6B189C-CA39-4DC1-BF85-8D9297FDBB1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.Eventos.IntegrationTests", "Modules\Eventos\Modules.Eventos.IntegrationTests\Modules.Eventos.IntegrationTests.csproj", "{CA6B189C-CA39-4DC1-BF85-8D9297FDBB1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
