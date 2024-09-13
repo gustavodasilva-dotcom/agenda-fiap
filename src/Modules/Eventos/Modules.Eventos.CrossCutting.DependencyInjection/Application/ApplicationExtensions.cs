@@ -7,9 +7,12 @@ internal static partial class ApplicationExtensions
     public static IServiceCollection AddApplication(
         this IServiceCollection services)
     {
+        var assembly = Eventos.Application.AssemblyReference.Assembly;
+
+        services.AddAutoMapper(assembly);
+
         services.AddMediatR(config
-            => config.RegisterServicesFromAssembly(
-                   Eventos.Application.AssemblyReference.Assembly));
+            => config.RegisterServicesFromAssembly(assembly));
 
         return services;
     }

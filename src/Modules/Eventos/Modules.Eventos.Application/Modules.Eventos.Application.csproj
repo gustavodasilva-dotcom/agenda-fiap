@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="MassTransit" Version="8.2.5" />
     <PackageReference Include="MediatR" Version="12.4.0" />
   </ItemGroup>
@@ -16,5 +16,11 @@
     <ProjectReference Include="..\..\Contatos\Modules.Contatos.IntegrationEvents\Modules.Contatos.IntegrationEvents.csproj" />
     <ProjectReference Include="..\Modules.Eventos.Domain\Modules.Eventos.Domain.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>Modules.Eventos.UnitTests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
 
 </Project>

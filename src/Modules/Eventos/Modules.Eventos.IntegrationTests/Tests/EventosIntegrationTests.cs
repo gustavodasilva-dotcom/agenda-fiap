@@ -29,10 +29,10 @@ namespace Agenda.Modules.Eventos.IntegrationTests.Tests
         {
             var novoEvento = new EventoRequest
             {
-                IdContato = 1,
                 Nome = "Novo Evento",
                 DataEventoFinal = DateTime.MinValue,
-                DataEventoInicio = DateTime.Now
+                DataEventoInicio = DateTime.Now,
+                ContatosIds = [1]
             };
 
             var jsonEvento = JsonSerializer.Serialize(novoEvento);
@@ -54,10 +54,10 @@ namespace Agenda.Modules.Eventos.IntegrationTests.Tests
         {
             var eventoAtualizado = new EventoRequest
             {
-                IdContato = 1,
                 Nome = "Evento Atualizado",
                 DataEventoFinal = DateTime.MinValue,
-                DataEventoInicio = DateTime.Now
+                DataEventoInicio = DateTime.Now,
+                ContatosIds = [1]
             };
 
             var jsonEventoAtualizado = JsonSerializer.Serialize(eventoAtualizado);

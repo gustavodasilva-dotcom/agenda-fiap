@@ -15,12 +15,15 @@ public sealed class EventoRepository(EventosDbContext dbContext)
         => _dbContext.Eventos.Include(e => e.Contatos)
             .SingleOrDefault(filtro);
 
+    public override List<Evento> ObterTodos()
+        => [.. _dbContext.Eventos.Include(e => e.Contatos)];
+
     public Evento? ObterEventoPorPeriodoEContato(int contatoId, DateTime dataInicio, DateTime dataFinal)
         => _dbContext.Eventos.Include(e => e.Contatos)
-            .FirstOrDefault(e => e.DataEventoInicio >= dataInicio &&
-                                e.DataEventoFinal <= dataFinal &&
-                                e.Contatos.Any(c =>
-                                    c.ContatoId == contatoId));
+            .FirstOrDefault(e =>
+                e.DataEventoInicio >= dataInicio &&
+                e.DataEventoFinal <= dataFinal &&
+                e.Contatos.Any(c => c.ContatoId == contatoId));
 
     public List<Evento> ObterEventosFuturosDoContato(int contatoId)
         => [.. _dbContext.Eventos.Include(e => e.Contatos)
