@@ -8,3 +8,7 @@ services:
     ports:
       - '5672:5672'
       - '15672:15672'
+      - '15692:15692'
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    entrypoint: /bin/sh -c "rabbitmq-plugins enable rabbitmq_prometheus && rabbitmq-server"
