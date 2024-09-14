@@ -52,6 +52,7 @@ public abstract class CustomWebApplicationFactory<TProgram, TDbContext> : WebApp
             var logger = scopedServices
                 .GetRequiredService<ILogger<CustomWebApplicationFactory<TProgram, TDbContext>>>();
 
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTest");
             try
             {
                 // Ensure the database is created

@@ -55,7 +55,7 @@ public static partial class DependencyInjection
 
     public static void UseApp(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() && !IsTestEnvironment())
         {
             app.ApplyMigrations(
                 Modules.Contatos.Persistence.AssemblyReference.Assembly,
@@ -63,5 +63,9 @@ public static partial class DependencyInjection
         }
 
         app.MapEndpoints();
+    }
+
+    public static bool IsTestEnvironment() {
+        return Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "IntegrationTest";
     }
 }
