@@ -1,4 +1,5 @@
 ﻿using Agenda.WebUI.Models;
+using Agenda.WebUI.Services.Responses;
 using System.Net.Http.Json;
 
 namespace Agenda.WebUI.Services
@@ -12,11 +13,11 @@ namespace Agenda.WebUI.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<List<ContatoModel>> GetEventosAsync(int? Ddd)
+        public async Task<List<EventoModel>> GetEventosAsync()
         {
             var client = _httpClientFactory.CreateClient(HttpClientNames.MyApiContatos);
 
-            var response = await client.GetAsync($"api/eventos/{Ddd}");
+            var response = await client.GetAsync($"api/eventos");
             var contentType = response.Content.Headers.ContentType;
 
             if (response.IsSuccessStatusCode
@@ -25,11 +26,30 @@ namespace Agenda.WebUI.Services
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
 
-                return await response.Content.ReadFromJsonAsync<List<ContatoModel>>() ?? [];
+                return await response.Content.ReadFromJsonAsync<List<EventoModel>>() ?? [];
             }
             else
                 return [];
         }
+
+        public async Task<BaseResponse> AdicionarEventoAsync(List<EventoModel> novoEvento)
+        {
+            var result = new BaseResponse();
+
+            var client = _httpClientFactory.CreateClient(HttpClientNames.MyApiContatos);
+            var response = await client.PostAsJsonAsync("api/eventos/", novoEvento);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadFromJsonAsync<BaseResponse>();
+
+                result.FailWithMessage(responseContent!.Message);
+            }
+
+            return result;
+        }
+
+
     }
 
 

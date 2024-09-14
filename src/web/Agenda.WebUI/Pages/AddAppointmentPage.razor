@@ -1,22 +1,22 @@
 ﻿@using Agenda.WebUI.Models
 @inject DialogService DialogService
 
-<RadzenTemplateForm TItem="Appointment" Data="@model" Submit=@OnSubmit>
+<RadzenTemplateForm TItem="EventoModel" Data="@model" Submit=@OnSubmit>
     <RadzenStack Gap="1rem">
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
             <RadzenLabel Text="Title" Style="width: 4rem;" />
-            <RadzenTextBox @bind-Value="@model.Text" Name="Text" Style="width: 12rem;" />
-            <RadzenRequiredValidator Component="Text" Text="Title is required" />
+            <RadzenTextBox @bind-Value="@model.Nome" Name="Text" Style="width: 12rem;" />
+            <RadzenRequiredValidator Component="Nome" Text="Title is required" />
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
             <RadzenLabel Text="Start" Style="width: 4rem;" />
-            <RadzenDatePicker @bind-Value="@model.Start" Name="Start" ShowTime="true" Style="width: 12rem;" />
-            <RadzenRequiredValidator Component="Start" Text="Start is required" />
+            <RadzenDatePicker @bind-Value="@model.DataEventoInicio" Name="Start" ShowTime="true" Style="width: 12rem;" />
+            <RadzenRequiredValidator Component="DataInicial" Text="Start is required" />
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
             <RadzenLabel Text="End" Style="width: 4rem;" />
-            <RadzenDatePicker Name="End" @bind-Value="@model.End" ShowTime="true" Style="width: 12rem;" />
-            <RadzenRequiredValidator Component="End" Text="End is required" />
+            <RadzenDatePicker Name="End" @bind-Value="@model.DataEventoFinal" ShowTime="true" Style="width: 12rem;" />
+            <RadzenRequiredValidator Component="DataFinal" Text="End is required" />
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
             <RadzenButton ButtonType="ButtonType.Submit" Text="Save" />
@@ -26,20 +26,20 @@
 
 @code {
     [Parameter]
-    public DateTime Start { get; set; }
+    public DateTime DataInicial { get; set; }
 
     [Parameter]
-    public DateTime End { get; set; }
+    public DateTime DataFinal { get; set; }
 
-    Appointment model = new Appointment();
+    EventoModel model = new EventoModel();
 
     protected override void OnParametersSet()
     {
-        model.Start = Start;
-        model.End = End;
+        model.DataEventoInicio = DataInicial;
+        model.DataEventoFinal = DataFinal;
     }
 
-    void OnSubmit(Appointment model)
+    void OnSubmit(EventoModel model)
     {
         DialogService.Close(model);
     }

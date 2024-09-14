@@ -9,8 +9,8 @@
 @inject EventosService EventosService
 @inject DialogService DialogService
 
-<RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="Appointment" Data=@appointments StartProperty="Start" EndProperty="End"
-    TextProperty="Text" SelectedIndex="2"
+<RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="EventoModel" Data=@appointments StartProperty="DataInicial" EndProperty="DataFinal"
+    TextProperty="Nome" SelectedIndex="2"
     SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender
     AppointmentMove=@OnAppointmentMove >
     <RadzenDayView />
@@ -21,20 +21,25 @@
 @* <EventConsole @ref=@console /> *@
 
 @code {
-    RadzenScheduler<Appointment> scheduler;
+    RadzenScheduler<EventoModel> scheduler;
     // EventConsole console;
     Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
 
-    IList<Appointment> appointments = new List<Appointment>
+    IList<EventoModel> appointments = new List<EventoModel>
     {
-        new Appointment { Start = DateTime.Today.AddDays(-2), End = DateTime.Today.AddDays(-2), Text = "Birthday" },
-        new Appointment { Start = DateTime.Today.AddDays(-11), End = DateTime.Today.AddDays(-10), Text = "Day off" },
-        new Appointment { Start = DateTime.Today.AddDays(-10), End = DateTime.Today.AddDays(-8), Text = "Work from home" },
-        new Appointment { Start = DateTime.Today.AddHours(10), End = DateTime.Today.AddHours(12), Text = "Online meeting" },
-        new Appointment { Start = DateTime.Today.AddHours(10), End = DateTime.Today.AddHours(13), Text = "Skype call" },
-        new Appointment { Start = DateTime.Today.AddHours(14), End = DateTime.Today.AddHours(14).AddMinutes(30), Text = "Dentist appointment" },
-        new Appointment { Start = DateTime.Today.AddDays(1), End = DateTime.Today.AddDays(12), Text = "Vacation" },
+        new EventoModel { DataEventoInicio = DateTime.Today.AddDays(-2), DataEventoFinal = DateTime.Today.AddDays(-2), Nome = "Birthday" },
+        new EventoModel { DataEventoInicio = DateTime.Today.AddDays(-11), DataEventoFinal = DateTime.Today.AddDays(-10), Nome = "Day off" },
+        new EventoModel { DataEventoInicio = DateTime.Today.AddDays(-10), DataEventoFinal = DateTime.Today.AddDays(-8), Nome = "Work from home" },
+        new EventoModel { DataEventoInicio = DateTime.Today.AddHours(10), DataEventoFinal = DateTime.Today.AddHours(12), Nome = "Online meeting" },
+        new EventoModel { DataEventoInicio = DateTime.Today.AddHours(10), DataEventoFinal = DateTime.Today.AddHours(13), Nome = "Skype call" },
+        new EventoModel { DataEventoInicio = DateTime.Today.AddHours(14), DataEventoFinal = DateTime.Today.AddHours(14).AddMinutes(30), Nome = "Dentist appointment" },
+        new EventoModel { DataEventoInicio = DateTime.Today.AddDays(1), DataEventoFinal = DateTime.Today.AddDays(12), Nome = "Vacation" },
     };
+
+    protected override async Task OnInitializedAsync()
+    {
+        appointments = await EventosService.GetEventosAsync();
+    }
 
     void OnSlotRender(SchedulerSlotRenderEventArgs args)
     {
@@ -57,11 +62,13 @@
 
         if (args.View.Text != "Year")
         {
-            Appointment data = await DialogService.OpenAsync<AddAppointmentPage>("Add Appointment",
-                new Dictionary<string, object> { { "Start", args.Start }, { "End", args.End } });
+            EventoModel data = await DialogService.OpenAsync<AddAppointmentPage>("Add Appointment",
+                new Dictionary<string, object> { { "DataEventoInicio", args.Start }, { "DataEventoFinal", args.End } });
 
             if (data != null)
             {
+                // EventosService.AdicionarEventoAsync();
+
                 appointments.Add(data);
                 // Either call the Reload method or reassign the Data property of the Scheduler
                 await scheduler.Reload();
@@ -69,15 +76,15 @@
         }
     }
 
-    async Task OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<Appointment> args)
+    async Task OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<EventoModel> args)
     {
         // console.Log($"AppointmentSelect: Appointment={args.Data.Text}");
 
-        var copy = new Appointment
+        var copy = new EventoModel
             {
-                Start = args.Data.Start,
-                End = args.Data.End,
-                Text = args.Data.Text
+                DataEventoInicio = args.Data.DataEventoInicio,
+                DataEventoFinal = args.Data.DataEventoFinal,
+                Nome = args.Data.Nome
             };
 
         var data = await DialogService.OpenAsync<EditAppointmentPage>("Edit Appointment", new Dictionary<string, object> { { "Appointment", copy } });
@@ -85,19 +92,19 @@
         if (data != null)
         {
             // Update the appointment
-            args.Data.Start = data.Start;
-            args.Data.End = data.End;
-            args.Data.Text = data.Text;
+            args.Data.DataEventoInicio = data.DataInicial;
+            args.Data.DataEventoFinal = data.DataFinal;
+            args.Data.Nome = data.Nome;
         }
 
         await scheduler.Reload();
     }
 
-    void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<Appointment> args)
+    void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<EventoModel> args)
     {
         // Never call StateHasChanged in AppointmentRender - would lead to infinite loop
 
-        if (args.Data.Text == "Birthday")
+        if (args.Data.Nome == "Birthday")
         {
             args.Attributes["style"] = "background: red";
         }
@@ -109,9 +116,9 @@
 
         if (draggedAppointment != null)
         {
-            draggedAppointment.Start = draggedAppointment.Start + args.TimeSpan;
+            draggedAppointment.DataEventoInicio = draggedAppointment.DataEventoInicio + args.TimeSpan;
 
-            draggedAppointment.End = draggedAppointment.End + args.TimeSpan;
+            draggedAppointment.DataEventoFinal = draggedAppointment.DataEventoFinal + args.TimeSpan;
 
             await scheduler.Reload();
         }
