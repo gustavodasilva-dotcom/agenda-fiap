@@ -1,11 +1,14 @@
-﻿using Agenda.Modules.Eventos.Domain.Entities;
+﻿using Agenda.Common.Shared.Abstractions;
+using Agenda.Modules.Eventos.Domain.Entities;
 using Agenda.Modules.Eventos.Persistence.Constants;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Agenda.Modules.Eventos.Persistence;
 
 public class EventosDbContext(
-    DbContextOptions<EventosDbContext> options) : DbContext(options)
+    DbContextOptions<EventosDbContext> options, IPublisher publisher)
+    : BaseDbContext<EventosDbContext>(options, publisher)
 {
     public DbSet<Evento> Eventos { get; set; }
 

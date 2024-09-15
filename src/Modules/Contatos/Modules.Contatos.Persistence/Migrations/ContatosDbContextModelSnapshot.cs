@@ -22,6 +22,36 @@ namespace Modules.Contatos.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Agenda.Modules.Contatos.Domain.ContatoEventoConvidado", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ContatoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EventoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusAceiteEvento")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContatoId");
+
+                    b.HasIndex("EventoId", "ContatoId")
+                        .IsUnique();
+
+                    b.ToTable("ContatoEventosConvidado", "contatos", t =>
+                        {
+                            t.HasCheckConstraint("CK_ContatoEventosConvidado_StatusAceiteEvento_Enum", "[StatusAceiteEvento] BETWEEN 0 AND 2");
+                        });
+                });
+
             modelBuilder.Entity("Agenda.Modules.Contatos.Domain.Entities.Contato", b =>
                 {
                     b.Property<int>("Id")
@@ -48,7 +78,24 @@ namespace Modules.Contatos.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Contatos", "contatos");
+                    b.ToTable("Contatos", "contatos", t =>
+                        {
+                            t.HasCheckConstraint("CK_Contatos_DDD_Enum", "[DDD] IN (11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 24, 27, 28, 31, 32, 33, 34, 35, 37, 38, 41, 42, 43, 44, 45, 46, 47, 48, 49, 51, 53, 54, 55, 61, 62, 63, 64, 65, 66, 67, 68, 69, 71, 73, 74, 75, 77, 79, 81, 82, 83, 84, 85, 86, 87, 88, 89, 91, 92, 93, 94, 95, 96, 97, 98, 99)");
+                        });
+                });
+
+            modelBuilder.Entity("Agenda.Modules.Contatos.Domain.ContatoEventoConvidado", b =>
+                {
+                    b.HasOne("Agenda.Modules.Contatos.Domain.Entities.Contato", null)
+                        .WithMany("EventosConvidado")
+                        .HasForeignKey("ContatoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Agenda.Modules.Contatos.Domain.Entities.Contato", b =>
+                {
+                    b.Navigation("EventosConvidado");
                 });
 #pragma warning restore 612, 618
         }

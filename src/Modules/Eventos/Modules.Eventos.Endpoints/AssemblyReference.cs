@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Modules.Eventos.Endpoints;
+namespace Agenda.Modules.Eventos.Endpoints;
 
 public static partial class AssemblyReference
 {

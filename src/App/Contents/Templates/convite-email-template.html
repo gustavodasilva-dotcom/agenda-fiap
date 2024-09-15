@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Você possui um convite!</title>
+    <style>
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #0073e6;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .content {
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .content h2 {
+            font-size: 20px;
+            color: #0073e6;
+        }
+
+        .content p {
+            margin-bottom: 20px;
+        }
+
+        .button {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .button a {
+            color: white;
+            padding: 15px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            min-width: 150px;
+        }
+
+        .button-confirm a {
+            background-color: #0073e6;
+        }
+
+        .button-reject a {
+            background-color: #dc3545;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .footer a {
+            color: #0073e6;
+            text-decoration: none;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .content h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Você possui um convite!</h1>
+        </div>
+
+        <div class="content">
+            <h2>Olá, <span id="nome-contato"></span>!</h2>
+            <p>
+                Você foi convidado(a) para o evento <span id="nome-evento"></span>, que acontece entre os dias <span
+                    id="data-inicio-evento"></span> e <span id="data-fim-evento"></span>.
+            </p>
+            <p>
+                Especifique sua presença com uma das opções abaixo.
+            </p>
+
+            <div class="button button-confirm">
+                <a href="#">Confirmar</a>
+            </div>
+
+            <div class="button button-reject">
+                <a href="#">Rejeitar</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© <span id="ano-atual"></span> Agenda FIAP.</p>
+        </div>
+    </div>
+</body>
+
+</html>

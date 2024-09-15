@@ -1,4 +1,5 @@
-﻿using Agenda.Common.Shared.Enums;
+﻿using System.Linq.Expressions;
+using Agenda.Common.Shared.Enums;
 using Agenda.Common.Shared.Repositories;
 using Agenda.Modules.Contatos.Domain.Abstractions;
 using Agenda.Modules.Contatos.Domain.Entities;
@@ -11,6 +12,10 @@ public sealed class ContatoRepository(ContatosDbContext dbContext)
 {
     private readonly ContatosDbContext _dbContext = dbContext;
 
+    public override Contato? Obter(Expression<Func<Contato, bool>> filtro)
+        => _dbContext.Contatos.Include(c => c.EventosConvidado)
+            .SingleOrDefault(filtro);
+
     public IEnumerable<Contato> ObterPorFiltro(DDDs ddd)
     {
         var consulta = _dbContext.Contatos.AsNoTracking();
@@ -22,16 +27,12 @@ public sealed class ContatoRepository(ContatosDbContext dbContext)
     }
 
     public Contato? ContatoExistenteComMesmoTelefone(string telefone)
-    {
-        return _dbContext
+        => _dbContext
             .Contatos
             .FirstOrDefault(c => c.Telefone.Equals(telefone.Trim()));
-    }
 
     public Contato? ContatoExistenteComMesmoEmail(string email)
-    {
-        return _dbContext
+        => _dbContext
             .Contatos
             .FirstOrDefault(c => c.Email.Equals(email.Trim()));
-    }
 }

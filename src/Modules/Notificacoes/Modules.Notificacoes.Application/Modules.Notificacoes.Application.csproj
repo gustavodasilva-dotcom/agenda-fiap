@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Modules.Notificacoes.Domain\Modules.Notificacoes.Domain.csproj" />
+    <ProjectReference Include="..\..\Contatos\Modules.Contatos.IntegrationEvents\Modules.Contatos.IntegrationEvents.csproj" />
+    <ProjectReference Include="..\..\..\Common\Agenda.Common.Shared\Agenda.Common.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.65" />
+    <PackageReference Include="MassTransit" Version="8.2.5" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

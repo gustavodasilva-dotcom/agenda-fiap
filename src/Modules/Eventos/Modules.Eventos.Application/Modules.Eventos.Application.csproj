@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Contatos\Modules.Contatos.IntegrationEvents\Modules.Contatos.IntegrationEvents.csproj" />
     <ProjectReference Include="..\Modules.Eventos.Domain\Modules.Eventos.Domain.csproj" />
+    <ProjectReference Include="..\Modules.Eventos.IntegrationEvents\Modules.Eventos.IntegrationEvents.csproj" />
   </ItemGroup>
 
   <ItemGroup>
