@@ -30,9 +30,6 @@ public abstract class BaseDbContext<TDbContext>(
         }
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseEnumCheckConstraints();
-
     public override async Task<int> SaveChangesAsync(
         CancellationToken cancellationToken = default)
     {
