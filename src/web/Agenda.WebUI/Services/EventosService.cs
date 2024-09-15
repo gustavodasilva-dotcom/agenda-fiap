@@ -32,7 +32,7 @@ namespace Agenda.WebUI.Services
                 return [];
         }
 
-        public async Task<BaseResponse> AdicionarEventoAsync(List<EventoModel> novoEvento)
+        public async Task<BaseResponse> AdicionarEventoAsync(EventoModel novoEvento)
         {
             var result = new BaseResponse();
 

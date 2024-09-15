@@ -1,4 +1,6 @@
 ﻿using System.Net.Http.Json;
+using Agenda.Common.Shared.Enums;
+using Agenda.Common.Shared.Extensions;
 using Agenda.WebUI.Models;
 using Agenda.WebUI.Services.Responses;
 
@@ -78,6 +80,18 @@ public class ContatosService
             var responseContent = await response.Content.ReadFromJsonAsync<BaseResponse>();
 
             result.FailWithMessage(responseContent!.Message);
+        }
+
+        return result;
+    }
+
+    public List<DDDModel> GetDdds()
+    {
+        var result = new List<DDDModel>();
+
+        foreach (DDDs enumValue in Enum.GetValues(typeof(DDDs)))
+        {
+            result.Add(new DDDModel((int)enumValue, enumValue.GetEnumDisplayName()));
         }
 
         return result;

@@ -1,22 +1,38 @@
 ﻿@using Agenda.WebUI.Models
+@using Agenda.WebUI.Services
+
 @inject DialogService DialogService
+@inject ContatosService ContatosService
 
 <RadzenTemplateForm TItem="EventoModel" Data="@model" Submit=@OnSubmit>
     <RadzenStack Gap="1rem">
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
             <RadzenLabel Text="Title" Style="width: 4rem;" />
-            <RadzenTextBox @bind-Value="@model.Nome" Name="Text" Style="width: 12rem;" />
-            <RadzenRequiredValidator Component="Nome" Text="Title is required" />
+            <RadzenTextBox @bind-Value="@model.Nome" Name="Text" Style="width: 100%" />
+            @* <RadzenRequiredValidator Component="Nome" Text="Title is required" /> *@
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
             <RadzenLabel Text="Start" Style="width: 4rem;" />
-            <RadzenDatePicker @bind-Value="@model.DataEventoInicio" Name="Start" ShowTime="true" Style="width: 12rem;" />
-            <RadzenRequiredValidator Component="DataInicial" Text="Start is required" />
+            <RadzenDatePicker @bind-Value="@model.DataEventoInicio" Name="Start" ShowTime="true" Style="width: 100%;" />
+            @* <RadzenRequiredValidator Component="DataEventoInicio" Text="Start is required" /> *@
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
             <RadzenLabel Text="End" Style="width: 4rem;" />
-            <RadzenDatePicker Name="End" @bind-Value="@model.DataEventoFinal" ShowTime="true" Style="width: 12rem;" />
-            <RadzenRequiredValidator Component="DataFinal" Text="End is required" />
+            <RadzenDatePicker Name="End" @bind-Value="@model.DataEventoFinal" ShowTime="true" Style="width: 100%;" />
+            @* <RadzenRequiredValidator Component="DataEventoFinal" Text="End is required" /> *@
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
+            <RadzenLabel Text="Title" Style="width: 4rem;" />
+            <RadzenDropDown @bind-Value="@DDDsSelecionados" 
+                            Data="ListaDDDs" TextProperty="Descricao" ValueProperty="Ddd"
+                            Multiple="true" Name="DDDs" Style="width: 100%;"
+                            Change="OnDddSelectedChange" />
+            @* <RadzenRequiredValidator Component="Nome" Text="Title is required" /> *@
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
+            <RadzenLabel Text="Title" Style="width: 4rem;" />
+            <RadzenDropDown @bind-Value="@model.ContatosIds" Data="Contatos" TextProperty="Nome" Multiple="true" Name="Contatos" Style="width: 100%;" />
+            @* <RadzenRequiredValidator Component="Nome" Text="Title is required" /> *@
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
             <RadzenButton ButtonType="ButtonType.Submit" Text="Save" />
@@ -26,17 +42,38 @@
 
 @code {
     [Parameter]
-    public DateTime DataInicial { get; set; }
+    public string Nome { get; set; }
 
     [Parameter]
-    public DateTime DataFinal { get; set; }
+    public DateTime DataEventoInicio { get; set; }
+
+    [Parameter]
+    public DateTime DataEventoFinal { get; set; }
+
+    public List<int> DDDsSelecionados { get; set; }
+    public List<DDDModel> ListaDDDs { get; set; }
+    public List<ContatoModel> Contatos { get; set; }
 
     EventoModel model = new EventoModel();
 
     protected override void OnParametersSet()
     {
-        model.DataEventoInicio = DataInicial;
-        model.DataEventoFinal = DataFinal;
+        model.DataEventoInicio = DataEventoInicio;
+        model.DataEventoFinal = DataEventoFinal;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaDDDs = ContatosService.GetDdds();
+    }
+
+    protected async Task OnDddSelectedChange(object dddSelecionado)
+    {
+        if (dddSelecionado != null)
+        {
+            var ddds = (dddSelecionado as IEnumerable<int>).ToList();
+            // var response = await ContatosService.GetContatosAsync(dddSelecionado.Ddd);
+        }
     }
 
     void OnSubmit(EventoModel model)

@@ -9,7 +9,7 @@
 @inject EventosService EventosService
 @inject DialogService DialogService
 
-<RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="EventoModel" Data=@appointments StartProperty="DataInicial" EndProperty="DataFinal"
+<RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="EventoModel" Data=@appointments StartProperty="DataEventoInicio" EndProperty="DataEventoFinal"
     TextProperty="Nome" SelectedIndex="2"
     SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender
     AppointmentMove=@OnAppointmentMove >
@@ -25,16 +25,7 @@
     // EventConsole console;
     Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
 
-    IList<EventoModel> appointments = new List<EventoModel>
-    {
-        new EventoModel { DataEventoInicio = DateTime.Today.AddDays(-2), DataEventoFinal = DateTime.Today.AddDays(-2), Nome = "Birthday" },
-        new EventoModel { DataEventoInicio = DateTime.Today.AddDays(-11), DataEventoFinal = DateTime.Today.AddDays(-10), Nome = "Day off" },
-        new EventoModel { DataEventoInicio = DateTime.Today.AddDays(-10), DataEventoFinal = DateTime.Today.AddDays(-8), Nome = "Work from home" },
-        new EventoModel { DataEventoInicio = DateTime.Today.AddHours(10), DataEventoFinal = DateTime.Today.AddHours(12), Nome = "Online meeting" },
-        new EventoModel { DataEventoInicio = DateTime.Today.AddHours(10), DataEventoFinal = DateTime.Today.AddHours(13), Nome = "Skype call" },
-        new EventoModel { DataEventoInicio = DateTime.Today.AddHours(14), DataEventoFinal = DateTime.Today.AddHours(14).AddMinutes(30), Nome = "Dentist appointment" },
-        new EventoModel { DataEventoInicio = DateTime.Today.AddDays(1), DataEventoFinal = DateTime.Today.AddDays(12), Nome = "Vacation" },
-    };
+    IList<EventoModel> appointments = new List<EventoModel>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,11 +58,18 @@
 
             if (data != null)
             {
-                // EventosService.AdicionarEventoAsync();
+                var response = await EventosService.AdicionarEventoAsync(data);
 
-                appointments.Add(data);
-                // Either call the Reload method or reassign the Data property of the Scheduler
-                await scheduler.Reload();
+                if (response.Success)
+                {
+                    appointments.Add(data);
+                    // Either call the Reload method or reassign the Data property of the Scheduler
+                    await scheduler.Reload();
+                }
+                else
+                {
+                    await DialogService.Alert(response.Message, "Não foi possível realizar operação!");
+                }
             }
         }
     }
@@ -92,8 +90,8 @@
         if (data != null)
         {
             // Update the appointment
-            args.Data.DataEventoInicio = data.DataInicial;
-            args.Data.DataEventoFinal = data.DataFinal;
+            args.Data.DataEventoInicio = data.DataEventoInicio;
+            args.Data.DataEventoFinal = data.DataEventoFinal;
             args.Data.Nome = data.Nome;
         }
 
