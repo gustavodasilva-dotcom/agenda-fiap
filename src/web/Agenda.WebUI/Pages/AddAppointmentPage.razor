@@ -33,11 +33,11 @@
             <RadzenLabel Text="Contatos" Style="width: 100%;" />
             <RadzenDropDown @bind-Value="@model.ContatosIds"
                             Data="Contatos" TextProperty="Nome" ValueProperty="Id" Multiple="true" 
-                            Name="Contatos" Style="width: 100%;" />
+                            Name="Contatos" Style="width: 100%;" SelectAllText="Selecionar Todos" />
             @* <RadzenRequiredValidator Component="Nome" Text="Title is required" /> *@
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
-            <RadzenButton ButtonType="ButtonType.Submit" Text="Save" />
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Salvar" />
         </RadzenStack>
     </RadzenStack>
 </RadzenTemplateForm>
@@ -62,24 +62,39 @@
         model.DataEventoFinal = Evento.DataEventoFinal;
         model.ContatosIds = Evento.ContatosIds;
         model.Nome = Evento.Nome;
-
-        foreach (var item in Evento.ContatosIds)
-        {
-            // var contatos = ContatosService.GetContatosAsync();
-            // Contatos.AddRange();
-        }
     }
 
     protected override async Task OnInitializedAsync()
     {
         ListaDDDs = ContatosService.GetDdds();
+
+        if (Evento != null && Evento.ContatosIds.Any())
+        {
+            var contatosEvento = await ContatosService.GetContatosAsync(Evento.ContatosIds.ToArray());
+
+            foreach (var ddd in contatosEvento.Select(x => (int) x.DDD).Distinct())
+            {
+                var contatosDdd = await ContatosService.GetContatosAsync(ddd);
+
+                Contatos.AddRange(contatosDdd);
+                DDDsSelecionados.Add(ddd);
+                DDDsContatosBuscados.Add(ddd);
+            }
+        }
     }
 
     protected async Task OnDddSelectedChange()
     {
-        Contatos = Contatos.Where(x => DDDsSelecionados.Contains((int)x.DDD)).ToList();
-
         var ultimoDddSelecionado = DDDsSelecionados.LastOrDefault();
+        var contatosMantidosDropDown = Contatos.Where(x => DDDsSelecionados.Contains((int)x.DDD)).ToList();
+        var contatosRemovidosDropdown = Contatos.Except(contatosMantidosDropDown).ToList();
+
+        Contatos = contatosMantidosDropDown;
+
+        foreach (var item in contatosRemovidosDropdown)
+        {
+            model.ContatosIds.Remove(item.Id);
+        }
 
         if (DDDsSelecionados.Any() && DDDsContatosBuscados.Contains(ultimoDddSelecionado) == false)
         {
@@ -91,6 +106,10 @@
             }
 
             DDDsContatosBuscados.Add(ultimoDddSelecionado);
+        }
+        else
+        {
+            DDDsContatosBuscados = DDDsContatosBuscados.Where(x => DDDsSelecionados.Contains(x)).ToList();
         }
     }
 

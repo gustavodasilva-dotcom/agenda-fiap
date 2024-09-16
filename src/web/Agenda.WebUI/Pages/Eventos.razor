@@ -50,8 +50,15 @@
     {
         if (args.View.Text != "Year")
         {
-            EventoModel data = await DialogService.OpenAsync<AddAppointmentPage>("Add Appointment",
-                new Dictionary<string, object> { { "DataEventoInicio", args.Start }, { "DataEventoFinal", args.End } });
+            var copy = new EventoModel
+                {
+                    DataEventoInicio = args.Start,
+                    DataEventoFinal = args.End,
+                    Nome = "",
+                    ContatosIds = new List<int>()
+                };
+
+            EventoModel data = await DialogService.OpenAsync<AddAppointmentPage>("Add Appointment", new Dictionary<string, object> { { "Evento", copy } });
 
             if (data != null)
             {
@@ -98,7 +105,6 @@
     void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<EventoModel> args)
     {
         // Never call StateHasChanged in AppointmentRender - would lead to infinite loop
-
         if (args.Data.Nome == "Birthday")
         {
             args.Attributes["style"] = "background: red";

@@ -36,6 +36,28 @@ public class ContatosService
             return [];
     }
 
+    public async Task<List<ContatoModel>> GetContatosAsync(int[] ids)
+    {
+        var client = _httpClientFactory.CreateClient(HttpClientNames.MyApiContatos);
+
+        var idsQuery = string.Join(",", ids);
+        var response = await client.GetAsync($"api/contatos?ids={idsQuery}");
+        var contentType = response.Content.Headers.ContentType;
+
+        if (response.IsSuccessStatusCode
+            && contentType != null
+            && contentType.MediaType == "application/json")
+        {
+            var jsonString = await response.Content.ReadAsStringAsync();
+
+            var result = await response.Content.ReadFromJsonAsync<List<ContatoModel>>() ?? [];
+
+            return result;
+        }
+        else
+            return [];
+    }
+
     public async Task<BaseResponse> AdicionarContatoAsync(List<ContatoModel> novosContatos)
     {
         var result = new BaseResponse();

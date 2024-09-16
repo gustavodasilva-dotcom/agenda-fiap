@@ -21,6 +21,16 @@ public sealed class ContatoRepository(ContatosDbContext dbContext)
         return consulta;
     }
 
+    public IEnumerable<Contato> ObterPorFiltro(int[] ids)
+    {
+        var consulta = _dbContext.Contatos.AsNoTracking();
+
+        if (ids.Any())
+            consulta = consulta.Where(x => ids.Contains(x.Id));
+
+        return consulta;
+    }
+
     public Contato? ContatoExistenteComMesmoTelefone(string telefone)
     {
         return _dbContext
