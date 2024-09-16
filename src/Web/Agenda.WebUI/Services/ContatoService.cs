@@ -28,7 +28,9 @@ public class ContatosService
         {
             var jsonString = await response.Content.ReadAsStringAsync();
 
-            return await response.Content.ReadFromJsonAsync<List<ContatoModel>>() ?? [];
+            var result = await response.Content.ReadFromJsonAsync<List<ContatoModel>>() ?? [];
+
+            return result;
         }
         else
             return [];

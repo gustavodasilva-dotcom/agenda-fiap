@@ -1,4 +1,6 @@
-﻿namespace Agenda.WebUI.Models
+﻿using Agenda.Common.Shared.Enums;
+
+namespace Agenda.WebUI.Models
 {
     public class DDDModel
     {

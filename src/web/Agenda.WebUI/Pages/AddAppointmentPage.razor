@@ -7,31 +7,33 @@
 <RadzenTemplateForm TItem="EventoModel" Data="@model" Submit=@OnSubmit>
     <RadzenStack Gap="1rem">
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
-            <RadzenLabel Text="Title" Style="width: 4rem;" />
+            <RadzenLabel Text="Nome" Style="width: 100%;" />
             <RadzenTextBox @bind-Value="@model.Nome" Name="Text" Style="width: 100%" />
             @* <RadzenRequiredValidator Component="Nome" Text="Title is required" /> *@
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
-            <RadzenLabel Text="Start" Style="width: 4rem;" />
+            <RadzenLabel Text="Data Inicio" Style="width: 100%;" />
             <RadzenDatePicker @bind-Value="@model.DataEventoInicio" Name="Start" ShowTime="true" Style="width: 100%;" />
             @* <RadzenRequiredValidator Component="DataEventoInicio" Text="Start is required" /> *@
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
-            <RadzenLabel Text="End" Style="width: 4rem;" />
+            <RadzenLabel Text="Data Final" Style="width: 100%;" />
             <RadzenDatePicker Name="End" @bind-Value="@model.DataEventoFinal" ShowTime="true" Style="width: 100%;" />
             @* <RadzenRequiredValidator Component="DataEventoFinal" Text="End is required" /> *@
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
-            <RadzenLabel Text="Title" Style="width: 4rem;" />
-            <RadzenDropDown @bind-Value="@DDDsSelecionados" 
+            <RadzenLabel Text="DDDs" Style="width: 100%;" />
+            <RadzenDropDown @bind-Value="@DDDsSelecionados"
                             Data="ListaDDDs" TextProperty="Descricao" ValueProperty="Ddd"
                             Multiple="true" Name="DDDs" Style="width: 100%;"
-                            Change="OnDddSelectedChange" />
+                            Change="OnDddSelectedChange" AllowSelectAll="false" />
             @* <RadzenRequiredValidator Component="Nome" Text="Title is required" /> *@
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
-            <RadzenLabel Text="Title" Style="width: 4rem;" />
-            <RadzenDropDown @bind-Value="@model.ContatosIds" Data="Contatos" TextProperty="Nome" Multiple="true" Name="Contatos" Style="width: 100%;" />
+            <RadzenLabel Text="Contatos" Style="width: 100%;" />
+            <RadzenDropDown @bind-Value="@model.ContatosIds"
+                            Data="Contatos" TextProperty="Nome" ValueProperty="Id" Multiple="true" 
+                            Name="Contatos" Style="width: 100%;" />
             @* <RadzenRequiredValidator Component="Nome" Text="Title is required" /> *@
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
@@ -42,24 +44,30 @@
 
 @code {
     [Parameter]
-    public string Nome { get; set; }
+    public EventoModel Evento { get; set; }
 
-    [Parameter]
-    public DateTime DataEventoInicio { get; set; }
-
-    [Parameter]
-    public DateTime DataEventoFinal { get; set; }
-
-    public List<int> DDDsSelecionados { get; set; }
-    public List<DDDModel> ListaDDDs { get; set; }
-    public List<ContatoModel> Contatos { get; set; }
-
+    //Variaveis de controle
     EventoModel model = new EventoModel();
+    List<int> DDDsSelecionados = new List<int>();
+    List<int> DDDsContatosBuscados = new List<int>();
+    List<DDDModel> ListaDDDs = new List<DDDModel>();
+    List<ContatoModel> Contatos = new List<ContatoModel>();
+
+    //Componentes
+    RadzenDropDown<ContatoModel> dropDownContatos;
 
     protected override void OnParametersSet()
     {
-        model.DataEventoInicio = DataEventoInicio;
-        model.DataEventoFinal = DataEventoFinal;
+        model.DataEventoInicio = Evento.DataEventoInicio;
+        model.DataEventoFinal = Evento.DataEventoFinal;
+        model.ContatosIds = Evento.ContatosIds;
+        model.Nome = Evento.Nome;
+
+        foreach (var item in Evento.ContatosIds)
+        {
+            // var contatos = ContatosService.GetContatosAsync();
+            // Contatos.AddRange();
+        }
     }
 
     protected override async Task OnInitializedAsync()
@@ -67,12 +75,22 @@
         ListaDDDs = ContatosService.GetDdds();
     }
 
-    protected async Task OnDddSelectedChange(object dddSelecionado)
+    protected async Task OnDddSelectedChange()
     {
-        if (dddSelecionado != null)
+        Contatos = Contatos.Where(x => DDDsSelecionados.Contains((int)x.DDD)).ToList();
+
+        var ultimoDddSelecionado = DDDsSelecionados.LastOrDefault();
+
+        if (DDDsSelecionados.Any() && DDDsContatosBuscados.Contains(ultimoDddSelecionado) == false)
         {
-            var ddds = (dddSelecionado as IEnumerable<int>).ToList();
-            // var response = await ContatosService.GetContatosAsync(dddSelecionado.Ddd);
+            var response = await ContatosService.GetContatosAsync(ultimoDddSelecionado);
+
+            if (response.Any())
+            {
+                Contatos.AddRange(response);
+            }
+
+            DDDsContatosBuscados.Add(ultimoDddSelecionado);
         }
     }
 

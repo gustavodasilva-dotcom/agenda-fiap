@@ -10,9 +10,9 @@
 @inject DialogService DialogService
 
 <RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="EventoModel" Data=@appointments StartProperty="DataEventoInicio" EndProperty="DataEventoFinal"
-    TextProperty="Nome" SelectedIndex="2"
-    SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender
-    AppointmentMove=@OnAppointmentMove >
+                 TextProperty="Nome" SelectedIndex="2"
+                 SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender
+                 AppointmentMove=@OnAppointmentMove>
     <RadzenDayView />
     <RadzenWeekView />
     <RadzenMonthView />
@@ -22,7 +22,6 @@
 
 @code {
     RadzenScheduler<EventoModel> scheduler;
-    // EventConsole console;
     Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
 
     IList<EventoModel> appointments = new List<EventoModel>();
@@ -49,8 +48,6 @@
 
     async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
     {
-        // console.Log($"SlotSelect: Start={args.Start} End={args.End}");
-
         if (args.View.Text != "Year")
         {
             EventoModel data = await DialogService.OpenAsync<AddAppointmentPage>("Add Appointment",
@@ -76,20 +73,20 @@
 
     async Task OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<EventoModel> args)
     {
-        // console.Log($"AppointmentSelect: Appointment={args.Data.Text}");
-
         var copy = new EventoModel
             {
                 DataEventoInicio = args.Data.DataEventoInicio,
                 DataEventoFinal = args.Data.DataEventoFinal,
+                ContatosIds = args.Data.ContatosIds,
                 Nome = args.Data.Nome
             };
 
-        var data = await DialogService.OpenAsync<EditAppointmentPage>("Edit Appointment", new Dictionary<string, object> { { "Appointment", copy } });
+        var data = await DialogService.OpenAsync<AddAppointmentPage>("Edit Appointment", new Dictionary<string, object> { { "Evento", copy } });
 
         if (data != null)
         {
             // Update the appointment
+            args.Data.ContatosIds = data.ContatosIds;
             args.Data.DataEventoInicio = data.DataEventoInicio;
             args.Data.DataEventoFinal = data.DataEventoFinal;
             args.Data.Nome = data.Nome;
@@ -115,7 +112,6 @@
         if (draggedAppointment != null)
         {
             draggedAppointment.DataEventoInicio = draggedAppointment.DataEventoInicio + args.TimeSpan;
-
             draggedAppointment.DataEventoFinal = draggedAppointment.DataEventoFinal + args.TimeSpan;
 
             await scheduler.Reload();
