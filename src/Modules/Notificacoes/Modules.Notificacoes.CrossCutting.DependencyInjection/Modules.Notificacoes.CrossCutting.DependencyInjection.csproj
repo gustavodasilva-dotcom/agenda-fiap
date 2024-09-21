@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Modules.Notificacoes.Infrastructure\Modules.Notificacoes.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Common\Agenda.Common.Helpers\Agenda.Common.Helpers.csproj" />
+    <ProjectReference Include="..\Modules.Notificacoes.Application\Modules.Notificacoes.Application.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

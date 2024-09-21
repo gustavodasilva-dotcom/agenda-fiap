@@ -1,4 +1,5 @@
 ﻿using Agenda.Common.Shared.Abstractions;
+using Agenda.Modules.Contatos.Domain;
 using Agenda.Modules.Contatos.Domain.Entities;
 using Agenda.Modules.Contatos.Persistence.Constants;
 using MediatR;
@@ -11,6 +12,8 @@ public class ContatosDbContext(
     : BaseDbContext<ContatosDbContext>(options, publisher)
 {
     public DbSet<Contato> Contatos { get; set; }
+
+    public DbSet<ContatoEventoConvidado> ContatoEventosConvidado { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

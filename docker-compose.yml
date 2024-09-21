@@ -12,3 +12,9 @@ services:
     volumes:
       - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     entrypoint: /bin/sh -c "rabbitmq-plugins enable rabbitmq_prometheus && rabbitmq-server"
+  mailhog:
+    container_name: "mailhog"
+    image: mailhog/mailhog
+    ports:
+      - '1025:1025'
+      - '8025:8025'

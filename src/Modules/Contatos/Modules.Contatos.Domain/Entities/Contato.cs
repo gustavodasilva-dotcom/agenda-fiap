@@ -6,6 +6,8 @@ namespace Agenda.Modules.Contatos.Domain.Entities;
 
 public class Contato : BaseEntity
 {
+    private readonly HashSet<ContatoEventoConvidado> _eventosConvidado = [];
+
     private Contato(
         string nome,
         string telefone,
@@ -34,6 +36,9 @@ public class Contato : BaseEntity
     public string Email { get; private set; }
 
     public DDDs DDD { get; private set; }
+
+    public IReadOnlySet<ContatoEventoConvidado> EventosConvidado
+        => _eventosConvidado;
 
     public override IEnumerable<object> GetAtomicValues()
         => [Nome, Telefone, Email, DDD];
@@ -65,4 +70,13 @@ public class Contato : BaseEntity
 
     public void RaiseContatoExcluidoDomainEvent()
         => RaiseDomainEvent(new ContatoExcluidoDomainEvent(Id));
+
+    public void AdicionarEventoConvidado(int eventoId)
+    {
+        if (!_eventosConvidado.Any(e => e.EventoId == eventoId))
+        {
+            _eventosConvidado.Add(
+                ContatoEventoConvidado.CriarEvento(Id, eventoId));
+        }
+    }
 }

@@ -10,7 +10,7 @@ public abstract class BaseDbContext<TDbContext>(
 {
     private readonly IPublisher _publisher = publisher;
 
-    private List<IDomainEvent> GetDomainEvents()
+    private async Task PublishDomainEventsAsync()
     {
         var domainEvents = ChangeTracker
             .Entries<BaseEntity>()
@@ -22,15 +22,8 @@ public abstract class BaseDbContext<TDbContext>(
                 entity.ClearDomainEvents();
 
                 return domainEvents;
-            })
-            .ToList();
+            });
 
-        return domainEvents;
-    }
-
-    private async Task PublishDomainEventsAsync(
-        List<IDomainEvent> domainEvents)
-    {
         foreach (var domainEvent in domainEvents)
         {
             await _publisher.Publish(domainEvent);
@@ -40,11 +33,9 @@ public abstract class BaseDbContext<TDbContext>(
     public override async Task<int> SaveChangesAsync(
         CancellationToken cancellationToken = default)
     {
-        var domainEvents = GetDomainEvents();
-
         var result = await base.SaveChangesAsync(cancellationToken);
 
-        await PublishDomainEventsAsync(domainEvents);
+        await PublishDomainEventsAsync();
 
         return result;
     }

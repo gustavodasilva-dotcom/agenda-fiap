@@ -25,7 +25,9 @@ public class ContatosDbContextFactory : IDesignTimeDbContextFactory<ContatosDbCo
         optionsBuilder.UseSqlServer(connectionString);
 
         var services = new ServiceCollection();
-        services.AddTransient<IPublisher>();
+        
+        services.AddMediatR(config =>
+            config.RegisterServicesFromAssembly(AssemblyReference.Assembly));
 
         var serviceProvider = services.BuildServiceProvider();
 

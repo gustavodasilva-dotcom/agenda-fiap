@@ -483,4 +483,8 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 
+# Visual Studio Code debugging settings
 .vscode
+
+# RabbitMQ volume
+rabbitmq.conf/

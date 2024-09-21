@@ -2,14 +2,13 @@
 using Agenda.Modules.Eventos.Application.Contracts;
 using Agenda.Modules.Eventos.Application.Eventos.Commands.AlterarEvento;
 using Agenda.Modules.Eventos.Endpoints.Constants;
-using Agenda.Modules.Eventos.Endpoints;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace Modules.Eventos.Endpoints.Eventos;
+namespace Agenda.Modules.Eventos.Endpoints.Eventos;
 
 public class AlterarEvento : IEndpointInstaller
 {

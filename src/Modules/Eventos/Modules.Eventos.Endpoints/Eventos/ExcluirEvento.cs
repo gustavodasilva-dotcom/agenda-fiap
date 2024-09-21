@@ -6,27 +6,26 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Agenda.Modules.Eventos.Endpoints.Eventos
+namespace Agenda.Modules.Eventos.Endpoints.Eventos;
+
+public class ExcluirEvento : IEndpointInstaller
 {
-    public class ExcluirEvento : IEndpointInstaller
+    public void InstallEndpoint(IEndpointRouteBuilder app)
     {
-        public void InstallEndpoint(IEndpointRouteBuilder app)
+        app.MapDelete(EventosRoutes.ExcluirEvento, async (
+            int id,
+            ISender sender) =>
         {
-            app.MapDelete(EventosRoutes.ExcluirEvento, async (
-                int id,
-                ISender sender) =>
+            var command = new ExcluirEventoCommand(id);
+
+            var result = await sender.Send(command);
+            if (result.IsFailure)
             {
-                var command = new ExcluirEventoCommand(id);
+                return Results.NotFound(result.Error);
+            }
 
-                var result = await sender.Send(command);
-                if (result.IsFailure)
-                {
-                    return Results.NotFound(result.Error);
-                }
-
-                return Results.NoContent();
-            })
-            .WithTags(Tags.Eventos);
-        }
+            return Results.NoContent();
+        })
+        .WithTags(Tags.Eventos);
     }
 }

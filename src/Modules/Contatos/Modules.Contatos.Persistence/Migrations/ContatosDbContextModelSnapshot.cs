@@ -22,6 +22,33 @@ namespace Modules.Contatos.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Agenda.Modules.Contatos.Domain.ContatoEventoConvidado", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ContatoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EventoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusAceiteEvento")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContatoId");
+
+                    b.HasIndex("EventoId", "ContatoId")
+                        .IsUnique();
+
+                    b.ToTable("ContatoEventosConvidado", "contatos");
+                });
+
             modelBuilder.Entity("Agenda.Modules.Contatos.Domain.Entities.Contato", b =>
                 {
                     b.Property<int>("Id")
@@ -49,6 +76,20 @@ namespace Modules.Contatos.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Contatos", "contatos");
+                });
+
+            modelBuilder.Entity("Agenda.Modules.Contatos.Domain.ContatoEventoConvidado", b =>
+                {
+                    b.HasOne("Agenda.Modules.Contatos.Domain.Entities.Contato", null)
+                        .WithMany("EventosConvidado")
+                        .HasForeignKey("ContatoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Agenda.Modules.Contatos.Domain.Entities.Contato", b =>
+                {
+                    b.Navigation("EventosConvidado");
                 });
 #pragma warning restore 612, 618
         }

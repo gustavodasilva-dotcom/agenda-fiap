@@ -2,12 +2,13 @@
 using Agenda.Common.Helpers.DependencyInstaller;
 using Agenda.Common.Helpers.EndpointInstaller;
 using Agenda.Common.Helpers.MigrationApplier;
+using Agenda.Common.Shared.Extensions;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Modules.Eventos.Endpoints;
 
 namespace Agenda.Common.DependencyInjection;
 
@@ -18,11 +19,12 @@ public static partial class DependencyInjection
         builder.Services.InstallDependencies(
             builder.Configuration,
             Modules.Contatos.CrossCutting.DependencyInjection.AssemblyReference.Assembly,
-            Modules.Eventos.CrossCutting.DependencyInjection.AssemblyReference.Assembly);
+            Modules.Eventos.CrossCutting.DependencyInjection.AssemblyReference.Assembly,
+            Modules.Notificacoes.CrossCutting.DependencyInjection.AssemblyReference.Assembly);
 
         builder.Services.InstallEndpoints(
             Modules.Contatos.Endpoints.AssemblyReference.Assembly,
-            AssemblyReference.Assembly);
+            Modules.Eventos.Endpoints.AssemblyReference.Assembly);
 
         builder.Services.Configure<MessageBrokerOptions>(
             builder.Configuration.GetSection(MessageBrokerOptions.Position));
@@ -33,7 +35,9 @@ public static partial class DependencyInjection
         builder.Services.AddMassTransit(busConfigurator =>
         {
             busConfigurator.AddConsumers(
-                Modules.Eventos.Application.AssemblyReference.Assembly);
+                Modules.Contatos.Application.AssemblyReference.Assembly,
+                Modules.Eventos.Application.AssemblyReference.Assembly,
+                Modules.Notificacoes.Application.AssemblyReference.Assembly);
 
             busConfigurator.SetKebabCaseEndpointNameFormatter();
 
@@ -61,6 +65,13 @@ public static partial class DependencyInjection
                 Modules.Contatos.Persistence.AssemblyReference.Assembly,
                 Modules.Eventos.Persistence.AssemblyReference.Assembly);
         }
+
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(
+                app.Environment.ContentRootPath.ConcatenarCaminho("Contents")),
+            RequestPath = "/resources"
+        });
 
         app.MapEndpoints();
     }
