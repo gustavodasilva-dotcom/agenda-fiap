@@ -5,10 +5,9 @@ using Agenda.Common.Helpers.MigrationApplier;
 using Agenda.Common.Shared.Extensions;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 
 namespace Agenda.Common.DependencyInjection;
 
@@ -26,12 +25,6 @@ public static partial class DependencyInjection
             Modules.Contatos.Endpoints.AssemblyReference.Assembly,
             Modules.Eventos.Endpoints.AssemblyReference.Assembly);
 
-        builder.Services.Configure<MessageBrokerOptions>(
-            builder.Configuration.GetSection(MessageBrokerOptions.Position));
-
-        builder.Services.AddSingleton(sp =>
-            sp.GetRequiredService<IOptions<MessageBrokerOptions>>().Value);
-
         builder.Services.AddMassTransit(busConfigurator =>
         {
             busConfigurator.AddConsumers(
@@ -41,15 +34,30 @@ public static partial class DependencyInjection
 
             busConfigurator.SetKebabCaseEndpointNameFormatter();
 
+            var messagingSettings = builder.Configuration
+                .GetSection(MessageBrokerOptions.Position)
+                .Get<MessageBrokerOptions>() ??
+                throw new InvalidOperationException($"Missing configuration for {MessageBrokerOptions.Position}.");
+
+            busConfigurator.AddConfigureEndpointsCallback((context, name, configurator) =>
+            {
+                configurator.UseMessageRetry(retryFilter => retryFilter
+                    .Immediate(messagingSettings.NumberOfRetries));
+
+                KillSwitchOptions killSwitchSettings = messagingSettings.KillSwitch;
+
+                configurator.UseKillSwitch(config => config
+                    .SetActivationThreshold(killSwitchSettings.ActivationThreshold)
+                    .SetTripThreshold(killSwitchSettings.TripThreshold)
+                    .SetRestartTimeout(m: killSwitchSettings.RestartMinutesTimeout));
+            });
+
             busConfigurator.UsingRabbitMq((context, configurator) =>
             {
-                MessageBrokerOptions options = context
-                    .GetRequiredService<MessageBrokerOptions>();
-
-                configurator.Host(options.Host, host =>
+                configurator.Host(messagingSettings.Host, host =>
                 {
-                    host.Username(options.Username);
-                    host.Password(options.Password);
+                    host.Username(messagingSettings.Username);
+                    host.Password(messagingSettings.Password);
                 });
 
                 configurator.ConfigureEndpoints(context);
