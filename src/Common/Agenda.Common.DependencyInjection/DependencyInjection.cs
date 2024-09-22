@@ -13,6 +13,9 @@ namespace Agenda.Common.DependencyInjection;
 
 public static partial class DependencyInjection
 {
+    private static bool IsTestEnvironment()
+        => Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "IntegrationTest";
+
     public static void RegisterApp(this WebApplicationBuilder builder)
     {
         builder.Services.InstallDependencies(
@@ -34,34 +37,37 @@ public static partial class DependencyInjection
 
             busConfigurator.SetKebabCaseEndpointNameFormatter();
 
-            var messagingSettings = builder.Configuration
-                .GetSection(MessageBrokerOptions.Position)
-                .Get<MessageBrokerOptions>() ??
-                throw new InvalidOperationException($"Missing configuration for {MessageBrokerOptions.Position}.");
-
-            busConfigurator.AddConfigureEndpointsCallback((context, name, configurator) =>
+            if (!IsTestEnvironment())
             {
-                configurator.UseMessageRetry(retryFilter => retryFilter
-                    .Immediate(messagingSettings.NumberOfRetries));
+                var messagingSettings = builder.Configuration
+                    .GetSection(MessageBrokerOptions.Position)
+                    .Get<MessageBrokerOptions>() ??
+                    throw new InvalidOperationException($"Missing configuration for {MessageBrokerOptions.Position}.");
 
-                KillSwitchOptions killSwitchSettings = messagingSettings.KillSwitch;
-
-                configurator.UseKillSwitch(config => config
-                    .SetActivationThreshold(killSwitchSettings.ActivationThreshold)
-                    .SetTripThreshold(killSwitchSettings.TripThreshold)
-                    .SetRestartTimeout(m: killSwitchSettings.RestartMinutesTimeout));
-            });
-
-            busConfigurator.UsingRabbitMq((context, configurator) =>
-            {
-                configurator.Host(messagingSettings.Host, host =>
+                busConfigurator.AddConfigureEndpointsCallback((context, name, configurator) =>
                 {
-                    host.Username(messagingSettings.Username);
-                    host.Password(messagingSettings.Password);
+                    configurator.UseMessageRetry(retryFilter => retryFilter
+                        .Immediate(messagingSettings.NumberOfRetries));
+
+                    KillSwitchOptions killSwitchSettings = messagingSettings.KillSwitch;
+
+                    configurator.UseKillSwitch(config => config
+                        .SetActivationThreshold(killSwitchSettings.ActivationThreshold)
+                        .SetTripThreshold(killSwitchSettings.TripThreshold)
+                        .SetRestartTimeout(m: killSwitchSettings.RestartMinutesTimeout));
                 });
 
-                configurator.ConfigureEndpoints(context);
-            });
+                busConfigurator.UsingRabbitMq((context, configurator) =>
+                {
+                    configurator.Host(messagingSettings.Host, host =>
+                    {
+                        host.Username(messagingSettings.Username);
+                        host.Password(messagingSettings.Password);
+                    });
+
+                    configurator.ConfigureEndpoints(context);
+                });
+            }
         });
     }
 
@@ -82,9 +88,5 @@ public static partial class DependencyInjection
         });
 
         app.MapEndpoints();
-    }
-
-    public static bool IsTestEnvironment() {
-        return Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "IntegrationTest";
     }
 }
