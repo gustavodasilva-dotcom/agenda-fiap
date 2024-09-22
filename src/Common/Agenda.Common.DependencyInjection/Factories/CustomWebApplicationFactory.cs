@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -16,21 +15,6 @@ public abstract class CustomWebApplicationFactory<TProgram, TDbContext> : WebApp
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureAppConfiguration((context, configurator) =>
-        {
-            var inMemorySettings = new Dictionary<string, string?>
-            {
-                { "MessageBroker:Host", "localhost" },
-                { "MessageBroker:Username", "guest" },
-                { "MessageBroker:Password", "guest" },
-                { "MessageBroker:NumberOfRetries", "3" },
-                { "MessageBroker:KillSwitch:ActivationThreshold", "5" },
-                { "MessageBroker:KillSwitch:TripThreshold", "0.5" },
-                { "MessageBroker:KillSwitch:RestartMinutesTimeout", "10" }
-            };
-            configurator.AddInMemoryCollection(inMemorySettings);
-        });
-
         builder.ConfigureServices(services =>
         {
             // Remove the existing DbContext registration
@@ -54,7 +38,7 @@ public abstract class CustomWebApplicationFactory<TProgram, TDbContext> : WebApp
                 .Setup(p => p.Publish(It.IsAny<IDomainEvent>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
-            services.AddSingleton<IPublisher>(mockPublisher.Object);
+            services.AddSingleton(mockPublisher.Object);
 
             // Build the service provider
             var sp = services.BuildServiceProvider();
