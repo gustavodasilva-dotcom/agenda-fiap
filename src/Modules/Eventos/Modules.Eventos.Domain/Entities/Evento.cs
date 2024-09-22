@@ -67,7 +67,7 @@ public class Evento : BaseEntity
 
             _contatos.Add(contato);
 
-            RaiseDomainEvent(() =>
+            RaiseEventFactory(() =>
             {
                 return new ContatoAdicionadoAoEventoDomainEvent(
                     contato.ContatoId,
