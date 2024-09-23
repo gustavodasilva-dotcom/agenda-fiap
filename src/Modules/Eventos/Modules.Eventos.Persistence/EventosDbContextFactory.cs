@@ -1,6 +1,8 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Agenda.Modules.Eventos.Persistence;
 
@@ -22,6 +24,15 @@ public class EventosDbContextFactory : IDesignTimeDbContextFactory<EventosDbCont
 
         optionsBuilder.UseSqlServer(connectionString);
 
-        return new EventosDbContext(optionsBuilder.Options);
+        var services = new ServiceCollection();
+
+        services.AddMediatR(config =>
+            config.RegisterServicesFromAssembly(AssemblyReference.Assembly));
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var publisher = serviceProvider.GetRequiredService<IPublisher>();
+
+        return new EventosDbContext(optionsBuilder.Options, publisher);
     }
 }

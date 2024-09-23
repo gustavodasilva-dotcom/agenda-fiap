@@ -2,54 +2,72 @@
 using Agenda.Common.Helpers.DependencyInstaller;
 using Agenda.Common.Helpers.EndpointInstaller;
 using Agenda.Common.Helpers.MigrationApplier;
+using Agenda.Common.Shared.Extensions;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using Modules.Eventos.Endpoints;
 
 namespace Agenda.Common.DependencyInjection;
 
 public static partial class DependencyInjection
 {
+    private static bool IsTestEnvironment()
+        => Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "IntegrationTest";
+
     public static void RegisterApp(this WebApplicationBuilder builder)
     {
         builder.Services.InstallDependencies(
             builder.Configuration,
             Modules.Contatos.CrossCutting.DependencyInjection.AssemblyReference.Assembly,
-            Modules.Eventos.CrossCutting.DependencyInjection.AssemblyReference.Assembly);
+            Modules.Eventos.CrossCutting.DependencyInjection.AssemblyReference.Assembly,
+            Modules.Notificacoes.CrossCutting.DependencyInjection.AssemblyReference.Assembly);
 
         builder.Services.InstallEndpoints(
             Modules.Contatos.Endpoints.AssemblyReference.Assembly,
-            AssemblyReference.Assembly);
-
-        builder.Services.Configure<MessageBrokerOptions>(
-            builder.Configuration.GetSection(MessageBrokerOptions.Position));
-
-        builder.Services.AddSingleton(sp =>
-            sp.GetRequiredService<IOptions<MessageBrokerOptions>>().Value);
+            Modules.Eventos.Endpoints.AssemblyReference.Assembly);
 
         builder.Services.AddMassTransit(busConfigurator =>
         {
             busConfigurator.AddConsumers(
-                Modules.Eventos.Application.AssemblyReference.Assembly);
+                Modules.Contatos.Application.AssemblyReference.Assembly,
+                Modules.Eventos.Application.AssemblyReference.Assembly,
+                Modules.Notificacoes.Application.AssemblyReference.Assembly);
 
             busConfigurator.SetKebabCaseEndpointNameFormatter();
 
-            busConfigurator.UsingRabbitMq((context, configurator) =>
+            if (!IsTestEnvironment())
             {
-                MessageBrokerOptions options = context
-                    .GetRequiredService<MessageBrokerOptions>();
+                var messagingSettings = builder.Configuration
+                    .GetSection(MessageBrokerOptions.Position)
+                    .Get<MessageBrokerOptions>() ??
+                    throw new InvalidOperationException($"Missing configuration for {MessageBrokerOptions.Position}.");
 
-                configurator.Host(options.Host, host =>
+                busConfigurator.AddConfigureEndpointsCallback((context, name, configurator) =>
                 {
-                    host.Username(options.Username);
-                    host.Password(options.Password);
+                    configurator.UseMessageRetry(retryFilter => retryFilter
+                        .Immediate(messagingSettings.NumberOfRetries));
+
+                    KillSwitchOptions killSwitchSettings = messagingSettings.KillSwitch;
+
+                    configurator.UseKillSwitch(config => config
+                        .SetActivationThreshold(killSwitchSettings.ActivationThreshold)
+                        .SetTripThreshold(killSwitchSettings.TripThreshold)
+                        .SetRestartTimeout(m: killSwitchSettings.RestartMinutesTimeout));
                 });
 
-                configurator.ConfigureEndpoints(context);
-            });
+                busConfigurator.UsingRabbitMq((context, configurator) =>
+                {
+                    configurator.Host(messagingSettings.Host, host =>
+                    {
+                        host.Username(messagingSettings.Username);
+                        host.Password(messagingSettings.Password);
+                    });
+
+                    configurator.ConfigureEndpoints(context);
+                });
+            }
         });
     }
 
@@ -62,10 +80,13 @@ public static partial class DependencyInjection
                 Modules.Eventos.Persistence.AssemblyReference.Assembly);
         }
 
-        app.MapEndpoints();
-    }
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(
+                app.Environment.ContentRootPath.ConcatenarCaminho("Contents")),
+            RequestPath = "/resources"
+        });
 
-    public static bool IsTestEnvironment() {
-        return Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "IntegrationTest";
+        app.MapEndpoints();
     }
 }

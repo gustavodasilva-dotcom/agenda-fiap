@@ -1,32 +1,30 @@
-﻿using Agenda.Modules.Eventos.Application.Eventos.Queries.ObterEventos;
-using Agenda.Modules.Eventos.Endpoints;
+﻿using Agenda.Common.Helpers.EndpointInstaller;
+using Agenda.Modules.Eventos.Application.Eventos.Queries.ObterEventos;
 using Agenda.Modules.Eventos.Endpoints.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Agenda.Common.Helpers.EndpointInstaller;
 
-namespace Modules.Eventos.Endpoints.Eventos
+namespace Agenda.Modules.Eventos.Endpoints.Eventos;
+
+public class ObterEvento : IEndpointInstaller
 {
-    public class ObterEvento : IEndpointInstaller
+    public void InstallEndpoint(IEndpointRouteBuilder app)
     {
-        public void InstallEndpoint(IEndpointRouteBuilder app)
+        app.MapGet(EventosRoutes.ObterEventos, async (
+            ISender sender) =>
         {
-            app.MapGet(EventosRoutes.ObterEventos, async (
-                ISender sender) =>
+            var command = new ObterEventosQuery();
+
+            var result = await sender.Send(command);
+            if (!result.Any())
             {
-                var command = new ObterEventosQuery();
+                return Results.NoContent();
+            }
 
-                var result = await sender.Send(command);
-                if (!result.Any())
-                {
-                    return Results.NoContent();
-                }
-
-                return Results.Ok(result);
-            })
-            .WithTags(Tags.Eventos);
-        }
+            return Results.Ok(result);
+        })
+        .WithTags(Tags.Eventos);
     }
 }

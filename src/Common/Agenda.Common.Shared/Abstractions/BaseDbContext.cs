@@ -10,41 +10,68 @@ public abstract class BaseDbContext<TDbContext>(
 {
     private readonly IPublisher _publisher = publisher;
 
-    private List<IDomainEvent> GetDomainEvents()
-    {
-        var domainEvents = ChangeTracker
+    IEnumerable<IDomainEvent> GetDomainEventsFromChangeTracker(
+        Func<BaseEntity, IEnumerable<IDomainEvent>> selector)
+        => ChangeTracker
             .Entries<BaseEntity>()
             .Select(entry => entry.Entity)
-            .SelectMany(entity =>
-            {
-                var domainEvents = entity.GetDomainEvents();
+            .SelectMany(selector);
 
-                entity.ClearDomainEvents();
-
-                return domainEvents;
-            })
-            .ToList();
-
-        return domainEvents;
-    }
-
-    private async Task PublishDomainEventsAsync(
-        List<IDomainEvent> domainEvents)
+    private void GetDomainEvents(ref Stack<IDomainEvent> eventsStack)
     {
-        foreach (var domainEvent in domainEvents)
+        var domainEvents = GetDomainEventsFromChangeTracker(entity =>
         {
-            await _publisher.Publish(domainEvent);
+            var domainEvents = entity.GetDomainEvents();
+
+            entity.ClearDomainEvents();
+
+            return domainEvents;
+        });
+
+        foreach (IDomainEvent domainEvent in domainEvents)
+        {
+            eventsStack.Push(domainEvent);
         }
     }
 
-    public override async Task<int> SaveChangesAsync(
-        CancellationToken cancellationToken = default)
+    private void GetEventFactories(ref Stack<IDomainEvent> eventsStack)
     {
-        var domainEvents = GetDomainEvents();
+        var eventFactories = GetDomainEventsFromChangeTracker(entity =>
+        {
+            var eventFactories = entity.GetEventFactories();
+
+            entity.ClearEventFactories();
+
+            return eventFactories;
+        });
+
+        foreach (IDomainEvent domainEvent in eventFactories)
+        {
+            eventsStack.Push(domainEvent);
+        }
+    }
+
+    private async Task PublishDomainEventsAsync(Stack<IDomainEvent> eventsStack)
+    {
+        foreach (IDomainEvent domainEvent in eventsStack)
+        {
+            await _publisher.Publish(domainEvent);
+        }
+
+        eventsStack.Clear();
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        Stack<IDomainEvent> eventsStack = new();
+
+        GetDomainEvents(ref eventsStack);
 
         var result = await base.SaveChangesAsync(cancellationToken);
 
-        await PublishDomainEventsAsync(domainEvents);
+        GetEventFactories(ref eventsStack);
+
+        await PublishDomainEventsAsync(eventsStack);
 
         return result;
     }

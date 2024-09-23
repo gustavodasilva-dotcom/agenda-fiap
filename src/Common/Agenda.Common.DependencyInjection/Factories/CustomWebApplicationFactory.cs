@@ -38,7 +38,7 @@ public abstract class CustomWebApplicationFactory<TProgram, TDbContext> : WebApp
                 .Setup(p => p.Publish(It.IsAny<IDomainEvent>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
-            services.AddSingleton<IPublisher>(mockPublisher.Object);
+            services.AddSingleton(mockPublisher.Object);
 
             // Build the service provider
             var sp = services.BuildServiceProvider();

@@ -18,5 +18,9 @@ public sealed partial class ContatoConfiguration : IEntityTypeConfiguration<Cont
         
         builder.Property(p => p.Telefone)
             .HasMaxLength(maxLength: InfrastructureConstants.MaxLength9);
+
+        builder.HasMany(p => p.EventosConvidado)
+            .WithOne()
+            .HasForeignKey(e => e.ContatoId);
     }
 }
