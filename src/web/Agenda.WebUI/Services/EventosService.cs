@@ -49,6 +49,40 @@ namespace Agenda.WebUI.Services
             return result;
         }
 
+        public async Task<BaseResponse> AtualizarEventoAsync(EventoModel evento)
+        {
+            var result = new BaseResponse();
+
+            var client = _httpClientFactory.CreateClient(HttpClientNames.MyApiContatos);
+            var response = await client.PutAsJsonAsync($"api/eventos/{evento.Id}", evento);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadFromJsonAsync<BaseResponse>();
+
+                result.FailWithMessage(responseContent!.Message);
+            }
+
+            return result;
+        }
+
+        public async Task<BaseResponse> ExcluirEventoAsync(int id)
+        {
+            var result = new BaseResponse();
+
+            var client = _httpClientFactory.CreateClient(HttpClientNames.MyApiContatos);
+            var response = await client.DeleteAsync($"api/eventos/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadFromJsonAsync<BaseResponse>();
+
+                result.FailWithMessage(responseContent!.Message);
+            }
+
+            return result;
+        }
+
 
     }
 

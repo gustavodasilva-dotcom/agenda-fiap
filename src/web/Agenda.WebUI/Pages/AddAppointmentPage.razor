@@ -1,5 +1,6 @@
 ﻿@using Agenda.WebUI.Models
 @using Agenda.WebUI.Services
+@using Agenda.WebUI.Services.Responses
 
 @inject DialogService DialogService
 @inject ContatosService ContatosService
@@ -32,12 +33,21 @@
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
             <RadzenLabel Text="Contatos" Style="width: 100%;" />
             <RadzenDropDown @bind-Value="@model.ContatosIds"
-                            Data="Contatos" TextProperty="Nome" ValueProperty="Id" Multiple="true" 
+                            Data="Contatos" TextProperty="Nome" ValueProperty="Id" Multiple="true"
                             Name="Contatos" Style="width: 100%;" SelectAllText="Selecionar Todos" />
             @* <RadzenRequiredValidator Component="Nome" Text="Title is required" /> *@
         </RadzenStack>
-        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
-            <RadzenButton ButtonType="ButtonType.Submit" Text="Salvar" />
+        <RadzenStack Orientation="Orientation.Horizontal">
+            <div style="float: left; width: 50%;">
+                @if (model.Id > 0)
+                {
+                    <RadzenButton ButtonType="ButtonType.Button" Click=Excluir Text="Excluir" ButtonStyle="ButtonStyle.Danger" Style="float: left;" />
+                }
+            </div>
+
+            <div style="float: right; width: 50%;">
+                <RadzenButton ButtonType="ButtonType.Submit" Text="Salvar" Style="float: right;" />
+            </div>
         </RadzenStack>
     </RadzenStack>
 </RadzenTemplateForm>
@@ -45,6 +55,9 @@
 @code {
     [Parameter]
     public EventoModel Evento { get; set; }
+
+    [Parameter]
+    public AcaoResponseEnum Acao { get; set; }
 
     //Variaveis de controle
     EventoModel model = new EventoModel();
@@ -62,6 +75,7 @@
         model.DataEventoFinal = Evento.DataEventoFinal;
         model.ContatosIds = Evento.ContatosIds;
         model.Nome = Evento.Nome;
+        model.Id = Evento.Id;
     }
 
     protected override async Task OnInitializedAsync()
@@ -72,7 +86,7 @@
         {
             var contatosEvento = await ContatosService.GetContatosAsync(Evento.ContatosIds.ToArray());
 
-            foreach (var ddd in contatosEvento.Select(x => (int) x.DDD).Distinct())
+            foreach (var ddd in contatosEvento.Select(x => (int)x.DDD).Distinct())
             {
                 var contatosDdd = await ContatosService.GetContatosAsync(ddd);
 
@@ -113,8 +127,23 @@
         }
     }
 
+    async void Excluir()
+    {
+        var response = await DialogService.Confirm("Deseja realmente excluir evento?");
+
+        if (response.Value)
+            DialogService.Close(new ActionResponse<EventoModel>(AcaoResponseEnum.Excluir, model));
+    }
+
     void OnSubmit(EventoModel model)
     {
-        DialogService.Close(model);
+        var result = new ActionResponse<EventoModel>() { Data = model };
+
+        if (model.Id == 0)
+            result.Action = AcaoResponseEnum.Adicionar;
+        else
+            result.Action = AcaoResponseEnum.Alterar;
+
+        DialogService.Close(result);
     }
 }

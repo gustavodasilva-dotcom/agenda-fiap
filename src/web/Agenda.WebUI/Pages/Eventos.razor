@@ -2,6 +2,7 @@
 
 @using Agenda.WebUI.Models
 @using Agenda.WebUI.Services
+@using Agenda.WebUI.Services.Responses
 
 <h1>Eventos</h1>
 
@@ -27,6 +28,11 @@
     IList<EventoModel> appointments = new List<EventoModel>();
 
     protected override async Task OnInitializedAsync()
+    {
+        await CarregarEventosAsync();
+    }
+
+    private async Task CarregarEventosAsync()
     {
         appointments = await EventosService.GetEventosAsync();
     }
@@ -58,17 +64,22 @@
                     ContatosIds = new List<int>()
                 };
 
-            EventoModel data = await DialogService.OpenAsync<AddAppointmentPage>("Add Appointment", new Dictionary<string, object> { { "Evento", copy } });
+            ActionResponse<EventoModel> responseDialog = await DialogService.OpenAsync<AddAppointmentPage>("Adicionar Evento", new Dictionary<string, object> { { "Evento", copy } });
 
-            if (data != null)
+            if (responseDialog != null)
             {
-                var response = await EventosService.AdicionarEventoAsync(data);
+                BaseResponse response = null;
+
+                if (responseDialog.Success && responseDialog.Action == AcaoResponseEnum.Adicionar)
+                    response = await EventosService.AdicionarEventoAsync(responseDialog.Data);
 
                 if (response.Success)
                 {
-                    appointments.Add(data);
-                    // Either call the Reload method or reassign the Data property of the Scheduler
-                    await scheduler.Reload();
+                    await CarregarEventosAsync();
+
+                    // appointments.Add(data);
+                    // // Either call the Reload method or reassign the Data property of the Scheduler
+                    // await scheduler.Reload();
                 }
                 else
                 {
@@ -82,21 +93,38 @@
     {
         var copy = new EventoModel
             {
+                Id = args.Data.Id,
                 DataEventoInicio = args.Data.DataEventoInicio,
                 DataEventoFinal = args.Data.DataEventoFinal,
                 ContatosIds = args.Data.ContatosIds,
                 Nome = args.Data.Nome
             };
 
-        var data = await DialogService.OpenAsync<AddAppointmentPage>("Edit Appointment", new Dictionary<string, object> { { "Evento", copy } });
+        var responseDialog = await DialogService.OpenAsync<AddAppointmentPage>("Alterar Evento", new Dictionary<string, object> { { "Evento", copy } }) as ActionResponse<EventoModel>;
 
-        if (data != null)
+        if (responseDialog != null && responseDialog.Success)
         {
+            BaseResponse response = null;
+
+            if (responseDialog.Action == AcaoResponseEnum.Alterar)
+                response = await EventosService.AtualizarEventoAsync(responseDialog.Data);
+            else
+                response = await EventosService.ExcluirEventoAsync(responseDialog.Data.Id);
+
+            if (response.Success)
+            {
+                await CarregarEventosAsync();
+            }
+            else
+            {
+                await DialogService.Alert(response.Message, "Não foi possível realizar operação!");
+            }
+
             // Update the appointment
-            args.Data.ContatosIds = data.ContatosIds;
-            args.Data.DataEventoInicio = data.DataEventoInicio;
-            args.Data.DataEventoFinal = data.DataEventoFinal;
-            args.Data.Nome = data.Nome;
+            args.Data.ContatosIds = responseDialog.Data.ContatosIds;
+            args.Data.DataEventoInicio = responseDialog.Data.DataEventoInicio;
+            args.Data.DataEventoFinal = responseDialog.Data.DataEventoFinal;
+            args.Data.Nome = responseDialog.Data.Nome;
         }
 
         await scheduler.Reload();
