@@ -1,0 +1,154 @@
+﻿@page "/eventos"
+
+@using Agenda.WebUI.Models
+@using Agenda.WebUI.Services
+@using Agenda.WebUI.Services.Responses
+
+<h1>Eventos</h1>
+
+@inject NavigationManager NavigationManager
+@inject EventosService EventosService
+@inject DialogService DialogService
+
+<RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="EventoModel" Data=@appointments StartProperty="DataEventoInicio" EndProperty="DataEventoFinal"
+                 TextProperty="Nome" SelectedIndex="2"
+                 SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender
+                 AppointmentMove=@OnAppointmentMove>
+    <RadzenDayView />
+    <RadzenWeekView />
+    <RadzenMonthView />
+</RadzenScheduler>
+
+@* <EventConsole @ref=@console /> *@
+
+@code {
+    RadzenScheduler<EventoModel> scheduler;
+    Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
+
+    IList<EventoModel> appointments = new List<EventoModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarEventosAsync();
+    }
+
+    private async Task CarregarEventosAsync()
+    {
+        appointments = await EventosService.GetEventosAsync();
+    }
+
+    void OnSlotRender(SchedulerSlotRenderEventArgs args)
+    {
+        // Highlight today in month view
+        if (args.View.Text == "Month" && args.Start.Date == DateTime.Today)
+        {
+            args.Attributes["style"] = "background: var(--rz-scheduler-highlight-background-color, rgba(255,220,40,.2));";
+        }
+
+        // Highlight working hours (9-18)
+        if ((args.View.Text == "Week" || args.View.Text == "Day") && args.Start.Hour > 8 && args.Start.Hour < 19)
+        {
+            args.Attributes["style"] = "background: var(--rz-scheduler-highlight-background-color, rgba(255,220,40,.2));";
+        }
+    }
+
+    async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
+    {
+        if (args.View.Text != "Year")
+        {
+            var copy = new EventoModel
+                {
+                    DataEventoInicio = args.Start,
+                    DataEventoFinal = args.End,
+                    Nome = "",
+                    ContatosIds = new List<int>()
+                };
+
+            ActionResponse<EventoModel> responseDialog = await DialogService.OpenAsync<AddAppointmentPage>("Adicionar Evento", new Dictionary<string, object> { { "Evento", copy } });
+
+            if (responseDialog != null)
+            {
+                BaseResponse response = null;
+
+                if (responseDialog.Success && responseDialog.Action == AcaoResponseEnum.Adicionar)
+                    response = await EventosService.AdicionarEventoAsync(responseDialog.Data);
+
+                if (response.Success)
+                {
+                    await CarregarEventosAsync();
+
+                    // appointments.Add(data);
+                    // // Either call the Reload method or reassign the Data property of the Scheduler
+                    // await scheduler.Reload();
+                }
+                else
+                {
+                    await DialogService.Alert(response.Message, "Não foi possível realizar operação!");
+                }
+            }
+        }
+    }
+
+    async Task OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<EventoModel> args)
+    {
+        var copy = new EventoModel
+            {
+                Id = args.Data.Id,
+                DataEventoInicio = args.Data.DataEventoInicio,
+                DataEventoFinal = args.Data.DataEventoFinal,
+                ContatosIds = args.Data.ContatosIds,
+                Nome = args.Data.Nome
+            };
+
+        var responseDialog = await DialogService.OpenAsync<AddAppointmentPage>("Alterar Evento", new Dictionary<string, object> { { "Evento", copy } }) as ActionResponse<EventoModel>;
+
+        if (responseDialog != null && responseDialog.Success)
+        {
+            BaseResponse response = null;
+
+            if (responseDialog.Action == AcaoResponseEnum.Alterar)
+                response = await EventosService.AtualizarEventoAsync(responseDialog.Data);
+            else
+                response = await EventosService.ExcluirEventoAsync(responseDialog.Data.Id);
+
+            if (response.Success)
+            {
+                await CarregarEventosAsync();
+            }
+            else
+            {
+                await DialogService.Alert(response.Message, "Não foi possível realizar operação!");
+            }
+
+            // Update the appointment
+            args.Data.ContatosIds = responseDialog.Data.ContatosIds;
+            args.Data.DataEventoInicio = responseDialog.Data.DataEventoInicio;
+            args.Data.DataEventoFinal = responseDialog.Data.DataEventoFinal;
+            args.Data.Nome = responseDialog.Data.Nome;
+        }
+
+        await scheduler.Reload();
+    }
+
+    void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<EventoModel> args)
+    {
+        // Never call StateHasChanged in AppointmentRender - would lead to infinite loop
+        if (args.Data.Nome == "Birthday")
+        {
+            args.Attributes["style"] = "background: red";
+        }
+    }
+
+    async Task OnAppointmentMove(SchedulerAppointmentMoveEventArgs args)
+    {
+        var draggedAppointment = appointments.FirstOrDefault(x => x == args.Appointment.Data);
+
+        if (draggedAppointment != null)
+        {
+            draggedAppointment.DataEventoInicio = draggedAppointment.DataEventoInicio + args.TimeSpan;
+            draggedAppointment.DataEventoFinal = draggedAppointment.DataEventoFinal + args.TimeSpan;
+
+            await scheduler.Reload();
+        }
+    }
+}

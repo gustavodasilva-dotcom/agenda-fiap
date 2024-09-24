@@ -7,6 +7,8 @@ public interface IContatoRepository : IBaseRepository<Contato>
 {
     IEnumerable<Contato> ObterPorFiltro(DDDs ddd);
 
+    IEnumerable<Contato> ObterPorFiltro(int[] ids);
+
     Contato? ContatoExistenteComMesmoTelefone(string telefone);
 
     Contato? ContatoExistenteComMesmoEmail(string email);

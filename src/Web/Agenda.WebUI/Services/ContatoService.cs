@@ -1,4 +1,6 @@
 ﻿using System.Net.Http.Json;
+using Agenda.Common.Shared.Enums;
+using Agenda.Common.Shared.Extensions;
 using Agenda.WebUI.Models;
 using Agenda.WebUI.Services.Responses;
 
@@ -26,7 +28,31 @@ public class ContatosService
         {
             var jsonString = await response.Content.ReadAsStringAsync();
 
-            return await response.Content.ReadFromJsonAsync<List<ContatoModel>>() ?? [];
+            var result = await response.Content.ReadFromJsonAsync<List<ContatoModel>>() ?? [];
+
+            return result;
+        }
+        else
+            return [];
+    }
+
+    public async Task<List<ContatoModel>> GetContatosAsync(int[] ids)
+    {
+        var client = _httpClientFactory.CreateClient(HttpClientNames.MyApiContatos);
+
+        var idsQuery = string.Join(",", ids);
+        var response = await client.GetAsync($"api/contatos?ids={idsQuery}");
+        var contentType = response.Content.Headers.ContentType;
+
+        if (response.IsSuccessStatusCode
+            && contentType != null
+            && contentType.MediaType == "application/json")
+        {
+            var jsonString = await response.Content.ReadAsStringAsync();
+
+            var result = await response.Content.ReadFromJsonAsync<List<ContatoModel>>() ?? [];
+
+            return result;
         }
         else
             return [];
@@ -78,6 +104,18 @@ public class ContatosService
             var responseContent = await response.Content.ReadFromJsonAsync<BaseResponse>();
 
             result.FailWithMessage(responseContent!.Message);
+        }
+
+        return result;
+    }
+
+    public List<DDDModel> GetDdds()
+    {
+        var result = new List<DDDModel>();
+
+        foreach (DDDs enumValue in Enum.GetValues(typeof(DDDs)))
+        {
+            result.Add(new DDDModel((int)enumValue, enumValue.GetEnumDisplayName()));
         }
 
         return result;
