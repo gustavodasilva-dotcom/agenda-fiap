@@ -108,4 +108,15 @@ public sealed class ContatosIntegrationTests : IAsyncLifetime
             Assert.Equal(DDDs.SP, contato.DDD);
         }
     }
+
+    [Fact]
+    public async Task ObterContatosPorIds_Returns_Ok() {
+        var getResponse = await _client!.GetAsync($"/api/contatos?ids=1");
+
+        getResponse.EnsureSuccessStatusCode();
+        var result = await getResponse.Content.ReadFromJsonAsync<List<ContatoResponse>>();
+
+        Assert.NotNull(result);
+        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
+    }
 }
