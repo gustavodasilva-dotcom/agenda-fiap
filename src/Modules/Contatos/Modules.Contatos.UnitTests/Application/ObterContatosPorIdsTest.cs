@@ -1,16 +1,10 @@
 ﻿using Agenda.Common.Shared.Enums;
-using Agenda.Modules.Contatos.Application.Contatos.Queries.ObterContatos;
 using Agenda.Modules.Contatos.Domain.Abstractions;
 using Agenda.Modules.Contatos.Domain.Entities;
 using Agenda.Modules.Contatos.UnitTests.Utils;
 using FluentAssertions;
 using Modules.Contatos.Application.Contatos.Queries.ObterContatosPorIdsQuery;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Modules.Contatos.UnitTests.Application
 {
