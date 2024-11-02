@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqlserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sqlserver
+  template:
+    metadata:
+      labels:
+        app: sqlserver
+    spec:
+      initContainers:
+      - name: init-db
+        image: mcr.microsoft.com/mssql-tools
+        command: ['sh', '-c', 'until /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P "fiap12345$" -d master -Q "SELECT 1"; do echo "Waiting for SQL Server to start..."; sleep 5; done; /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P "fiap12345$" -d master -i /scripts/init-db.sql']
+        volumeMounts:
+        - name: init-script
+          mountPath: /scripts
+      containers:
+      - name: sqlserver
+        image: mcr.microsoft.com/mssql/server
+        env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: SA_PASSWORD
+          value: "fiap12345$"
+        - name: MSSQL_PID
+          value: "Developer"
+        ports:
+        - containerPort: 1433
+      volumes:
+      - name: init-script
+        configMap:
+          name: sql-init-script

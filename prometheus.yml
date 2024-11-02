@@ -8,8 +8,8 @@ scrape_configs:
 
   - job_name: 'agenda-fiap'
     static_configs:
-    - targets: ['localhost:5207']
+    - targets: ['localhost:30004']
 
   - job_name: 'RabbitMQ'
     static_configs:
-    - targets: ['localhost:15692']
+    - targets: ['localhost:30012']
