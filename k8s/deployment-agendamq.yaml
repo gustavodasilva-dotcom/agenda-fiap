@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agenda-mq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agenda-mq
+  template:
+    metadata:
+      labels:
+        app: agenda-mq
+    spec:
+      containers:
+      - name: agenda-mq
+        image: rabbitmq:3.11.7-management
+        ports:
+        - containerPort: 5672
+        - containerPort: 15672
+        - containerPort: 15692
+        env:
+        - name: RABBIT_DEFAULT_USER
+          value: "guest"
+        - name: RABBIT_DEFAULT_PASS
+          value: "guest"
+        volumeMounts:
+        - name: rabbitmq-config
+          mountPath: /etc/rabbitmq/rabbitmq.conf
+          subPath: rabbitmq.conf
+        command:
+        - /bin/sh
+        - -c
+        - rabbitmq-plugins enable rabbitmq_prometheus && rabbitmq-server
+      volumes:
+      - name: rabbitmq-config
+        configMap:
+          name: rabbitmq-config

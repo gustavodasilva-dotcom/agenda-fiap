@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appsettings-config
+data:
+  appsettings.json: |
+    {
+      "ConnectionStrings": {
+        "Default": "Server=sqlserver;Database=AgendaFiap;User Id=SA;Password=fiap12345$;Connect Timeout=30;TrustServerCertificate=true;"
+      },
+      "MessageBroker": {
+        "Host": "rabbitmq://agenda-mq/",
+        "Username": "guest",
+        "Password": "guest",
+        "NumberOfRetries": 3,
+        "KillSwitch": {
+          "ActivationThreshold": 10,
+          "TripThreshold": 0.15,
+          "RestartMinutesTimeout": 1
+        }
+      },
+      "Smtp": {
+        "Sender": {
+          "Name": "No reply",
+          "Mail": "mock.no-reply@agenda-fiap.com"
+        },
+        "Host": "mailhog",
+        "Port": 1025,
+        "IsSecure": false
+      },
+      "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft.AspNetCore": "Warning"
+        }
+      }
+    }

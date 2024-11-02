@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agenda-fiap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agenda-fiap
+  template:
+    metadata:
+      labels:
+        app: agenda-fiap
+    spec:
+      containers:
+      - name: agenda-fiap
+        image: localhost:5000/agenda-fiap-agenda.fiap:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "production"
+        volumeMounts:
+        - name: appsettings
+          mountPath: /app/appsettings.json
+          subPath: appsettings.json
+      volumes:
+      - name: appsettings
+        configMap:
+          name: appsettings-config
