@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sqlserver-pv
+spec:
+  capacity:
+    storage: 50Mi 
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce  
+  persistentVolumeReclaimPolicy: Retain 
+  storageClassName: sqlserver-storage  
+  hostPath:
+    path: /mnt/data/mssql  
+    type: DirectoryOrCreate 

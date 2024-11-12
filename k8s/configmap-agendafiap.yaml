@@ -6,7 +6,7 @@ data:
   appsettings.json: |
     {
       "ConnectionStrings": {
-        "Default": "Server=sqlserver;Database=AgendaFiap;User Id=SA;Password=fiap12345$;Connect Timeout=30;TrustServerCertificate=true;"
+        "Default": "Server=sqlserver;User Id=sa;Password=fiap12345$;Database=AgendaFiap;TrustServerCertificate=True;"
       },
       "MessageBroker": {
         "Host": "rabbitmq://agenda-mq/",
